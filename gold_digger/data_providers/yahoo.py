@@ -11,6 +11,10 @@ class Yahoo(Provider):
     name = "yahoo"
 
     def __init__(self, base_currency, supported_currencies):
+        """
+        :type base_currency: str
+        :type supported_currencies: set[str]
+        """
         super().__init__(base_currency)
         self._downloaded_rates = {}
         self._supported_currencies = supported_currencies - {
