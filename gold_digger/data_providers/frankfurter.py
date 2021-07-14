@@ -62,8 +62,7 @@ class Frankfurter(Provider):
                     return {}
 
                 rates = response.get("rates", {})
-                if self.base_currency == "EUR":  # API doesn't return EUR in response if it is base currency
-                    rates["EUR"] = 1
+                rates[self.base_currency] = 1
 
                 for currency in currencies:
                     if currency in rates:
@@ -86,8 +85,8 @@ class Frankfurter(Provider):
         date_of_exchange_string = date_of_exchange.strftime("%Y-%m-%d")
         logger.debug("%s - Requesting for %s (%s)", self, currency, date_of_exchange_string, extra={"currency": currency, "date": date_of_exchange_string})
 
-        if currency == "EUR" and self.base_currency == "EUR":  # API returns error in this combination
-            return self._to_decimal(1, "EUR", logger=logger)
+        if currency == self.base_currency:
+            return self._to_decimal(1, currency, logger=logger)
 
         url = self.BASE_URL.format(date=date_of_exchange_string)
         response = self._get(url, params={"symbols": currency, "base": self.base_currency}, logger=logger)

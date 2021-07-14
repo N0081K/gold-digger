@@ -7,13 +7,13 @@ from requests import Response
 API_RESPONSE_USD = b"""
 {
   "base": "USD",
+  "date": "2019-04-15",
   "rates": {
     "BGN": 1.7288075665,
     "NZD": 1.4787412711,
     "ILS": 3.5618315213,
     "RUB": 64.2633253779,
     "CAD": 1.3312118801,
-    "USD": 1,
     "PHP": 51.6892071069,
     "CHF": 1.0028286043,
     "AUD": 1.3931759922,
@@ -41,49 +41,7 @@ API_RESPONSE_USD = b"""
     "CNY": 6.7061787324,
     "SEK": 9.2467073279,
     "EUR": 0.8839388314
-  },
-  "date": "2019-04-15"
-}
-"""
-
-API_RESPONSE_EUR = b"""
-{
-  "base": "EUR",
-  "rates": {
-    "BGN": 1.9558,
-    "NZD": 1.6729,
-    "ILS": 4.0295,
-    "RUB": 72.7011,
-    "CAD": 1.506,
-    "USD": 1.1313,
-    "PHP": 58.476,
-    "CHF": 1.1345,
-    "ZAR": 15.8192,
-    "AUD": 1.5761,
-    "JPY": 126.66,
-    "TRY": 6.5637,
-    "HKD": 8.8685,
-    "MYR": 4.6573,
-    "THB": 35.936,
-    "HRK": 7.436,
-    "NOK": 9.6018,
-    "IDR": 15906.08,
-    "DKK": 7.4639,
-    "CZK": 25.625,
-    "HUF": 320.25,
-    "GBP": 0.86305,
-    "MXN": 21.2497,
-    "KRW": 1281.37,
-    "ISK": 135.6,
-    "SGD": 1.5299,
-    "BRL": 4.3985,
-    "PLN": 4.2742,
-    "INR": 78.5405,
-    "RON": 4.7618,
-    "CNY": 7.5867,
-    "SEK": 10.4608
-  },
-  "date": "2019-04-15"
+  }
 }
 """
 
@@ -227,35 +185,35 @@ def test_get_all_by_date__currency_unavailable(frankfurter, response, logger):
     assert converted_rates == {}
 
 
-def test_get_by_date__eur_base_eur_target(frankfurter, response, logger):
+def test_get_by_date__base_currency_is_same_as_target_currency(frankfurter, base_currency, logger):
     """
-    Frankfurter API has a bug where it returns error when base currency is EUR and the target currency is also EUR. The data should be manually added to the result.
+    Frankfurter API returns error when base and target currencies are same.
 
     :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
-    :type response: requests.Response
+    :type base_currency: str
     :type logger: logging.Logger
     """
-    frankfurter._base_currency = "EUR"
-
-    converted_rates = frankfurter.get_by_date(date(2019, 4, 16), "EUR", logger)
+    converted_rates = frankfurter.get_by_date(date(2019, 4, 16), base_currency, logger)
     assert converted_rates == Decimal('1')
 
 
-def test_get_all_by_date__eur_base_eur_target(frankfurter, response, logger):
+def test_get_all_by_date__base_currency_is_same_as_target_currency(frankfurter, response, base_currency, logger):
     """
-    Frankfurter API has a bug where it doesn't return EUR rates when it is base currency. The data should be manually added to the result.
+    Frankfurter API returns error when base and target currencies are same.
 
     :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
     :type response: requests.Response
+    :type base_currency: str
     :type logger: logging.Logger
     """
     response.status_code = 200
-    response._content = API_RESPONSE_EUR
+    response._content = API_RESPONSE_USD
 
-    frankfurter._base_currency = "EUR"
+    frankfurter._get = lambda url, **kw: response
 
-    converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {"EUR", "CZK"}, logger)
+    converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {base_currency, "CZK"}, logger)
+
     assert converted_rates == {
-        "CZK": Decimal(25.663000000000000255795384873636066913604736328125),
-        "EUR": Decimal(1)
+        base_currency: Decimal(1),
+        "CZK": Decimal(22.6509325555),
     }
