@@ -75,7 +75,7 @@ class DiContainer:
             CurrencyLayer(self.base_currency, settings.SECRETS_CURRENCY_LAYER_ACCESS_KEY, self.logger()),
             Yahoo(self.base_currency, settings.SUPPORTED_CURRENCIES),
             Fixer(self.base_currency, settings.SECRETS_FIXER_ACCESS_KEY, self.logger()),
-            RatesAPI(self.base_currency),
+            Frankfurter(self.base_currency),
         )
         return {provider.name: provider for provider in providers}
 
