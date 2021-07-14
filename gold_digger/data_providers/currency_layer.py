@@ -16,12 +16,13 @@ class CurrencyLayer(Provider):
     BASE_URL = "http://www.apilayer.net/api/live?access_key=%s"
     name = "currency_layer"
 
-    def __init__(self, access_key, logger, *args, **kwargs):
+    def __init__(self, base_currency, access_key, logger):
         """
+        :type base_currency: str
         :type access_key: str
         :type logger: gold_digger.utils.ContextLogger
         """
-        super().__init__(*args, **kwargs)
+        super().__init__(base_currency)
         if access_key:
             self._url = self.BASE_URL % access_key
         else:

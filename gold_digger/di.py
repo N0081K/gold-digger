@@ -72,10 +72,10 @@ class DiContainer:
     def data_providers(self):
         providers = (
             GrandTrunk(self.base_currency),
-            CurrencyLayer(settings.SECRETS_CURRENCY_LAYER_ACCESS_KEY, self.logger(), self.base_currency),
+            CurrencyLayer(self.base_currency, settings.SECRETS_CURRENCY_LAYER_ACCESS_KEY, self.logger()),
             Yahoo(self.base_currency, settings.SUPPORTED_CURRENCIES),
-            Fixer(settings.SECRETS_FIXER_ACCESS_KEY, self.logger(), self.base_currency),
-            RatesAPI(self.base_currency),
+            Fixer(self.base_currency, settings.SECRETS_FIXER_ACCESS_KEY, self.logger()),
+            Frankfurter(self.base_currency),
         )
         return {provider.name: provider for provider in providers}
 

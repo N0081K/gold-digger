@@ -7,13 +7,15 @@ from cachetools import cachedmethod, keys
 from ._provider import Provider
 
 
-class RatesAPI(Provider):
+class Frankfurter(Provider):
     """
     Free service for current and historical foreign exchange rates built on top of data published by European Central Bank.
     Rates are updated only on working days around 16:00 CET
+
+    https://www.frankfurter.app/docs/
     """
-    BASE_URL = "http://api.ratesapi.io/api/{date}"
-    name = "rates_api"
+    BASE_URL = "https://api.frankfurter.app/{date}"
+    name = "frankfurter"
 
     @cachedmethod(cache=attrgetter("_cache"), key=lambda date_of_exchange, _: keys.hashkey(date_of_exchange))
     def get_supported_currencies(self, date_of_exchange, logger):
@@ -60,8 +62,7 @@ class RatesAPI(Provider):
                     return {}
 
                 rates = response.get("rates", {})
-                if self.base_currency == "EUR":  # Rates API doesn't return EUR in response if it is base currency
-                    rates["EUR"] = 1
+                rates[self.base_currency] = 1
 
                 for currency in currencies:
                     if currency in rates:
@@ -84,8 +85,8 @@ class RatesAPI(Provider):
         date_of_exchange_string = date_of_exchange.strftime("%Y-%m-%d")
         logger.debug("%s - Requesting for %s (%s)", self, currency, date_of_exchange_string, extra={"currency": currency, "date": date_of_exchange_string})
 
-        if currency == "EUR" and self.base_currency == "EUR":  # Rates API in this combination returns error
-            return self._to_decimal(1, "EUR", logger=logger)
+        if currency == self.base_currency:
+            return self._to_decimal(1, currency, logger=logger)
 
         url = self.BASE_URL.format(date=date_of_exchange_string)
         response = self._get(url, params={"symbols": currency, "base": self.base_currency}, logger=logger)

@@ -15,12 +15,13 @@ class Fixer(Provider):
     BASE_URL = "http://data.fixer.io/api/{path}?access_key=%s"
     name = "fixer.io"
 
-    def __init__(self, access_key, logger, *args, **kwargs):
+    def __init__(self, base_currency, access_key, logger):
         """
+        :type base_currency: str
         :type access_key: str
         :type logger: gold_digger.utils.ContextLogger
         """
-        super().__init__(*args, **kwargs)
+        super().__init__(base_currency)
         if access_key:
             self._url = self.BASE_URL % access_key
         else:
