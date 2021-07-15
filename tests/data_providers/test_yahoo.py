@@ -160,6 +160,7 @@ def test_yahoo_get_by_date(yahoo, logger):
     sample = Response()
     sample.status_code = 200
     sample._content = YAHOO_RESPONSE
+
     yahoo._get = lambda *a, **kw: sample
 
     assert yahoo.get_by_date(date.today(), "CZK", logger) == Decimal("25.959")
@@ -169,7 +170,9 @@ def test_yahoo_get_by_date__unsupported_currency(yahoo, logger):
     sample = Response()
     sample.status_code = 404
     sample._content = "404 Not Found"
+
     yahoo._get = lambda *a, **kw: sample
+
     assert yahoo.get_by_date(date.today(), "XXX", logger) is None  # unsupported currency
 
 

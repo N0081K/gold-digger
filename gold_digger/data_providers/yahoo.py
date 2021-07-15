@@ -10,12 +10,13 @@ class Yahoo(Provider):
     SYMBOLS_BATCH_SIZE = 20  # Yahoo has recently started returning error for more
     name = "yahoo"
 
-    def __init__(self, base_currency, supported_currencies):
+    def __init__(self, base_currency, http_user_agent, supported_currencies):
         """
         :type base_currency: str
+        :type http_user_agent: str
         :type supported_currencies: set[str]
         """
-        super().__init__(base_currency)
+        super().__init__(base_currency, http_user_agent)
         self._downloaded_rates = {}
         self._supported_currencies = supported_currencies - {
             "ATS", "BEF", "BYR", "CUC", "CYP", "DEM", "EEK", "ESP", "FIM", "FRF", "GGP", "GRD", "IEP",

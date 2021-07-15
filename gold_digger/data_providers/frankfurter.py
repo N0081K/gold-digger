@@ -1,8 +1,8 @@
 from datetime import date, timedelta
 from operator import attrgetter
 
-import requests
 from cachetools import cachedmethod, keys
+from requests import RequestException
 
 from ._provider import Provider
 
@@ -135,9 +135,10 @@ class Frankfurter(Provider):
         :rtype: requests.Response | None
         """
         try:
-            response = requests.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
+            self._http_session.cookies.clear()
+            response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
             if response.status_code != 200:
                 logger.error("%s - Status code: %s, URL: %s, Params: %s", self, response.status_code, url, params)
             return response
-        except requests.exceptions.RequestException as e:
+        except RequestException as e:
             logger.error("%s - Exception: %s, URL: %s, Params: %s", self, e, url, params)

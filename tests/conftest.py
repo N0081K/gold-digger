@@ -45,3 +45,8 @@ def base_currency():
 @pytest.fixture
 def currencies():
     return {"USD", "EUR", "CZK", "GBP"}
+
+
+@pytest.fixture
+def http_user_agent():
+    return "test-user-agent"
