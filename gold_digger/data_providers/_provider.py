@@ -10,6 +10,7 @@ from requests import RequestException, Session
 
 class Provider(metaclass=ABCMeta):
     DEFAULT_REQUEST_TIMEOUT = 15  # 15 seconds for both connect & read timeouts
+    USER_AGENT_HTTP_HEADER = "ROI Hunter/Exchange rates service; https://www.roihunter.com/"
 
     def __init__(self, base_currency):
         """
@@ -19,6 +20,7 @@ class Provider(metaclass=ABCMeta):
         self.has_request_limit = False
         self.request_limit_reached = False
         self._http_session = Session()
+        self._http_session.headers["User-Agent"] = self.USER_AGENT_HTTP_HEADER
         self._cache = Cache(maxsize=1)
 
     @property
