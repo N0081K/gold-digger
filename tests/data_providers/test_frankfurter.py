@@ -115,6 +115,24 @@ def test_get_by_date__currency_unavailable(frankfurter, response, logger):
     assert converted_rates is None
 
 
+def test_get_by_date__base_currency_is_same_as_target_currency(frankfurter, base_currency, logger):
+    """
+    Frankfurter API returns error when base and target currencies are same.
+
+    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type base_currency: str
+    :type logger: logging.Logger
+    """
+    response.status_code = 200
+    response._content = API_RESPONSE_USD
+
+    frankfurter._get = lambda url, **kw: response
+
+    converted_rates = frankfurter.get_by_date(date(2019, 4, 16), base_currency, logger)
+
+    assert converted_rates == Decimal('1')
+
+
 def test_get_all_by_date__available(frankfurter, response, logger):
     """
     :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
@@ -183,24 +201,6 @@ def test_get_all_by_date__currency_unavailable(frankfurter, response, logger):
 
     converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {"XXX"}, logger)
     assert converted_rates == {}
-
-
-def test_get_by_date__base_currency_is_same_as_target_currency(frankfurter, base_currency, logger):
-    """
-    Frankfurter API returns error when base and target currencies are same.
-
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
-    :type base_currency: str
-    :type logger: logging.Logger
-    """
-    response.status_code = 200
-    response._content = API_RESPONSE_USD
-
-    frankfurter._get = lambda url, **kw: response
-
-    converted_rates = frankfurter.get_by_date(date(2019, 4, 16), base_currency, logger)
-
-    assert converted_rates == Decimal('1')
 
 
 def test_get_all_by_date__base_currency_is_same_as_target_currency(frankfurter, response, base_currency, logger):
