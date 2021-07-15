@@ -71,11 +71,11 @@ class DiContainer:
     @service
     def data_providers(self):
         providers = (
-            GrandTrunk(self.base_currency),
-            CurrencyLayer(self.base_currency, settings.SECRETS_CURRENCY_LAYER_ACCESS_KEY, self.logger()),
-            Yahoo(self.base_currency, settings.SUPPORTED_CURRENCIES),
-            Fixer(self.base_currency, settings.SECRETS_FIXER_ACCESS_KEY, self.logger()),
-            Frankfurter(self.base_currency),
+            GrandTrunk(self.base_currency, settings.USER_AGENT_HTTP_HEADER),
+            CurrencyLayer(self.base_currency, settings.USER_AGENT_HTTP_HEADER, settings.SECRETS_CURRENCY_LAYER_ACCESS_KEY, self.logger()),
+            Yahoo(self.base_currency, settings.USER_AGENT_HTTP_HEADER, settings.SUPPORTED_CURRENCIES),
+            Fixer(self.base_currency, settings.USER_AGENT_HTTP_HEADER, settings.SECRETS_FIXER_ACCESS_KEY, self.logger()),
+            Frankfurter(self.base_currency, settings.USER_AGENT_HTTP_HEADER),
         )
         return {provider.name: provider for provider in providers}
 
