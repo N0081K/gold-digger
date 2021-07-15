@@ -135,6 +135,7 @@ class Frankfurter(Provider):
         :rtype: requests.Response | None
         """
         try:
+            self._http_session.cookies.clear()
             response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
             if response.status_code != 200:
                 logger.error("%s - Status code: %s, URL: %s, Params: %s", self, response.status_code, url, params)

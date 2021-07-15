@@ -79,6 +79,7 @@ class Provider(metaclass=ABCMeta):
         :rtype: requests.Response | None
         """
         try:
+            self._http_session.cookies.clear()
             response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
             if response.status_code == 200:
                 return response
