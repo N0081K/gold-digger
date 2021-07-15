@@ -4,9 +4,8 @@ from decimal import Decimal, InvalidOperation
 from functools import wraps
 from inspect import getcallargs
 
-import requests
-import requests.exceptions
 from cachetools import Cache
+from requests import RequestException, Session
 
 
 class Provider(metaclass=ABCMeta):
@@ -19,7 +18,7 @@ class Provider(metaclass=ABCMeta):
         self._base_currency = base_currency
         self.has_request_limit = False
         self.request_limit_reached = False
-
+        self._http_session = Session()
         self._cache = Cache(maxsize=1)
 
     @property
@@ -78,12 +77,12 @@ class Provider(metaclass=ABCMeta):
         :rtype: requests.Response | None
         """
         try:
-            response = requests.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
+            response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
             if response.status_code == 200:
                 return response
             else:
                 logger.error("%s - Status code: %s, URL: %s, Params: %s", self, response.status_code, url, params)
-        except requests.exceptions.RequestException as e:
+        except RequestException as e:
             logger.error("%s - Exception: %s, URL: %s, Params: %s", self, e, url, params)
 
     def _to_decimal(self, value, currency=None, *, logger):
