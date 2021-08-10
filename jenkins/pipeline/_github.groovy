@@ -4,7 +4,7 @@ import groovy.json.JsonSlurper
  * Get urls of all comments in GitHub PR
  * Only comments from bf-admin starting with specific prefix will be returned
  **/
-void getCommentsURLToDelete(commentPrefix) {
+ArrayList<String> getCommentsURLToDelete(commentPrefix) {
     String commentsAsString = ""
     try {
         withCredentials([string(credentialsId: "github-bf-admin-global", variable: "gold_digger_github_token")]) {
@@ -15,7 +15,7 @@ void getCommentsURLToDelete(commentPrefix) {
         }
     } catch (e) {
         echo "Script (get comments from GitHub) returned exception: " + e
-        return
+        return [] as ArrayList<String>
     }
 
     JsonSlurper jsonSlurper = new JsonSlurper()
@@ -23,10 +23,10 @@ void getCommentsURLToDelete(commentPrefix) {
 
     if ( !(comments instanceof List) ) {
         echo "Can't parse JSON - expected list of comments: '$commentsAsString'"
-        return
+        return [] as ArrayList<String>
     }
 
-    List<String> commentsURLToDelete = new ArrayList<String>()
+    ArrayList<String> commentsURLToDelete = new ArrayList<String>()
     comments.each {
         if ( it.user.login == "bf-admin" && it.body.startsWith(commentPrefix) ) {
             commentsURLToDelete.add(it.url)
@@ -59,7 +59,7 @@ void sendCommentToGit(String message) {
     try {
         withCredentials([string(credentialsId: "github-bf-admin-global", variable: "gold_digger_github_token")]) {
             sh(
-                script: "curl -s -H \"Authorization: token $gold_digger_github_token\" -X POST --data '{\"body\":\"${message}\"}\' \"https://api.github.com/repos/roihunter/gold-digger/issues/${ghprbPullId}/comments\" ",
+                script: "curl -s -H \"Authorization: token $gold_digger_github_token\" -X POST --data '''{\"body\":\"${message}\"}''' \"https://api.github.com/repos/roihunter/gold-digger/issues/${ghprbPullId}/comments\" ",
                 returnStdout: true
             )
         }
