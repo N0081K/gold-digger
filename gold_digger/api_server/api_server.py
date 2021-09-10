@@ -20,7 +20,7 @@ class IntervalsRateResource(DatabaseResource):
     def on_get_intervals_rate(self, req, resp, logger):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         :type logger: gold_digger.utils.ContextLogger
         """
         exchange_rate_manager = self.container.exchange_rate_manager
@@ -67,7 +67,7 @@ class DateRateResource(DatabaseResource):
     def on_get_date_rate(self, req, resp, logger):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         :type logger: gold_digger.utils.ContextLogger
         """
         exchange_rate_manager = self.container.exchange_rate_manager
@@ -114,7 +114,7 @@ class RangeRateResource(DatabaseResource):
     def on_get_range_rate(self, req, resp, logger):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         :type logger: gold_digger.utils.ContextLogger
         """
         logger.info("Range rate request: %s", req.params)
@@ -163,7 +163,7 @@ class HealthCheckResource:
     def on_get_check_readiness(self, req, resp):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         """
         resp.body = '{"status": "UP"}'
         resp.status = falcon.HTTP_200
@@ -173,7 +173,7 @@ class HealthAliveResource(DatabaseResource):
     def on_get_check_liveness(self, req, resp):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         """
         logger = self.container.logger()
         try:

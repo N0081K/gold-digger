@@ -22,7 +22,7 @@ def http_api_logger(func):
         """
         :type object: object
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         """
         start = time()
 
