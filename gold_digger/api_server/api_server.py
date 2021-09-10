@@ -47,7 +47,7 @@ class IntervalsRateResource(DatabaseResource):
 
         if not exchange_rate_in_intervals:
             logger.error("Exchange rate not found: rate %s %s->%s", date_of_exchange, from_currency, to_currency)
-            raise falcon.HTTPInternalServerError("Exchange rate not found", "Exchange rate not found")
+            raise falcon.HTTPInternalServerError(title="Exchange rate not found", description="Exchange rate not found")
 
         logger.info("GET intervals rate %s %s->%s %s", date_of_exchange, from_currency, to_currency, exchange_rate_in_intervals)
 
@@ -94,7 +94,7 @@ class DateRateResource(DatabaseResource):
 
         if not exchange_rate:
             logger.error("Exchange rate not found: rate %s %s->%s", date_of_exchange, from_currency, to_currency)
-            raise falcon.HTTPInternalServerError("Exchange rate not found", "Exchange rate not found")
+            raise falcon.HTTPInternalServerError(title="Exchange rate not found", description="Exchange rate not found")
 
         logger.info("GET rate %s %s->%s %s", date_of_exchange, from_currency, to_currency, exchange_rate)
 
@@ -143,7 +143,7 @@ class RangeRateResource(DatabaseResource):
 
         if not exchange_rate:
             logger.error("Exchange rate not found: range %s/%s %s->%s", start_date, end_date, from_currency, to_currency)
-            raise falcon.HTTPInternalServerError("Exchange rate not found", "Exchange rate not found")
+            raise falcon.HTTPInternalServerError(title="Exchange rate not found", description="Exchange rate not found")
 
         logger.info("GET range %s/%s %s->%s %s", start_date, end_date, from_currency, to_currency, exchange_rate)
 
