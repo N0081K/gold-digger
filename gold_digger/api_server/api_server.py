@@ -20,7 +20,7 @@ class IntervalsRateResource(DatabaseResource):
     def on_get_intervals_rate(self, req, resp, logger):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         :type logger: gold_digger.utils.ContextLogger
         """
         exchange_rate_manager = self.container.exchange_rate_manager
@@ -47,12 +47,12 @@ class IntervalsRateResource(DatabaseResource):
 
         if not exchange_rate_in_intervals:
             logger.error("Exchange rate not found: rate %s %s->%s", date_of_exchange, from_currency, to_currency)
-            raise falcon.HTTPInternalServerError("Exchange rate not found", "Exchange rate not found")
+            raise falcon.HTTPInternalServerError(title="Exchange rate not found", description="Exchange rate not found")
 
         logger.info("GET intervals rate %s %s->%s %s", date_of_exchange, from_currency, to_currency, exchange_rate_in_intervals)
 
         resp.status = falcon.HTTP_200
-        resp.body = json.dumps(
+        resp.text = json.dumps(
             {
                 "date": date_of_exchange.strftime("%Y-%m-%d"),
                 "from_currency": from_currency,
@@ -67,7 +67,7 @@ class DateRateResource(DatabaseResource):
     def on_get_date_rate(self, req, resp, logger):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         :type logger: gold_digger.utils.ContextLogger
         """
         exchange_rate_manager = self.container.exchange_rate_manager
@@ -94,12 +94,12 @@ class DateRateResource(DatabaseResource):
 
         if not exchange_rate:
             logger.error("Exchange rate not found: rate %s %s->%s", date_of_exchange, from_currency, to_currency)
-            raise falcon.HTTPInternalServerError("Exchange rate not found", "Exchange rate not found")
+            raise falcon.HTTPInternalServerError(title="Exchange rate not found", description="Exchange rate not found")
 
         logger.info("GET rate %s %s->%s %s", date_of_exchange, from_currency, to_currency, exchange_rate)
 
         resp.status = falcon.HTTP_200
-        resp.body = json.dumps(
+        resp.text = json.dumps(
             {
                 "date": date_of_exchange.strftime("%Y-%m-%d"),
                 "from_currency": from_currency,
@@ -114,7 +114,7 @@ class RangeRateResource(DatabaseResource):
     def on_get_range_rate(self, req, resp, logger):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         :type logger: gold_digger.utils.ContextLogger
         """
         logger.info("Range rate request: %s", req.params)
@@ -143,12 +143,12 @@ class RangeRateResource(DatabaseResource):
 
         if not exchange_rate:
             logger.error("Exchange rate not found: range %s/%s %s->%s", start_date, end_date, from_currency, to_currency)
-            raise falcon.HTTPInternalServerError("Exchange rate not found", "Exchange rate not found")
+            raise falcon.HTTPInternalServerError(title="Exchange rate not found", description="Exchange rate not found")
 
         logger.info("GET range %s/%s %s->%s %s", start_date, end_date, from_currency, to_currency, exchange_rate)
 
         resp.status = falcon.HTTP_200
-        resp.body = json.dumps(
+        resp.text = json.dumps(
             {
                 "start_date": start_date.strftime(format="%Y-%m-%d"),
                 "end_date": end_date.strftime(format="%Y-%m-%d"),
@@ -163,9 +163,9 @@ class HealthCheckResource:
     def on_get_check_readiness(self, req, resp):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         """
-        resp.body = '{"status": "UP"}'
+        resp.text = '{"status": "UP"}'
         resp.status = falcon.HTTP_200
 
 
@@ -173,25 +173,25 @@ class HealthAliveResource(DatabaseResource):
     def on_get_check_liveness(self, req, resp):
         """
         :type req: falcon.request.Request
-        :type resp: falcon.request.Response
+        :type resp: falcon.response.Response
         """
         logger = self.container.logger()
         try:
             self.container.db_session.execute("SELECT 1")
-            resp.body = '{"status": "UP"}'
+            resp.text = '{"status": "UP"}'
         except DatabaseError as e:
             self.container.db_session.rollback()
             info = "Database error. Service will reconnect to the DB automatically. Exception: %s" % e
-            resp.body = '{"status": "DOWN", "info": "%s"}' % info
+            resp.text = '{"status": "DOWN", "info": "%s"}' % info
             logger.exception(info)
         except Exception as e:
-            resp.body = '{"status": "DOWN", "info": "%s"}' % e
+            resp.text = '{"status": "DOWN", "info": "%s"}' % e
             logger.exception("Unexpected exception.")
 
         resp.status = falcon.HTTP_200
 
 
-class API(falcon.API):
+class API(falcon.App):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.container = di_container(__file__)
