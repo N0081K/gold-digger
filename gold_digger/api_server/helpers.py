@@ -79,7 +79,7 @@ def http_api_logger(func):
             })
 
             resp.status = falcon.HTTP_500
-            resp.body = json.dumps(
+            resp.text = json.dumps(
                 {
                     "error":
                         "Unexpected error. If the problem persists contact our support with trace ID 'golddigger." + logger.extra["flow_id"] + "' please."

@@ -52,7 +52,7 @@ class IntervalsRateResource(DatabaseResource):
         logger.info("GET intervals rate %s %s->%s %s", date_of_exchange, from_currency, to_currency, exchange_rate_in_intervals)
 
         resp.status = falcon.HTTP_200
-        resp.body = json.dumps(
+        resp.text = json.dumps(
             {
                 "date": date_of_exchange.strftime("%Y-%m-%d"),
                 "from_currency": from_currency,
@@ -99,7 +99,7 @@ class DateRateResource(DatabaseResource):
         logger.info("GET rate %s %s->%s %s", date_of_exchange, from_currency, to_currency, exchange_rate)
 
         resp.status = falcon.HTTP_200
-        resp.body = json.dumps(
+        resp.text = json.dumps(
             {
                 "date": date_of_exchange.strftime("%Y-%m-%d"),
                 "from_currency": from_currency,
@@ -148,7 +148,7 @@ class RangeRateResource(DatabaseResource):
         logger.info("GET range %s/%s %s->%s %s", start_date, end_date, from_currency, to_currency, exchange_rate)
 
         resp.status = falcon.HTTP_200
-        resp.body = json.dumps(
+        resp.text = json.dumps(
             {
                 "start_date": start_date.strftime(format="%Y-%m-%d"),
                 "end_date": end_date.strftime(format="%Y-%m-%d"),
@@ -165,7 +165,7 @@ class HealthCheckResource:
         :type req: falcon.request.Request
         :type resp: falcon.response.Response
         """
-        resp.body = '{"status": "UP"}'
+        resp.text = '{"status": "UP"}'
         resp.status = falcon.HTTP_200
 
 
@@ -178,14 +178,14 @@ class HealthAliveResource(DatabaseResource):
         logger = self.container.logger()
         try:
             self.container.db_session.execute("SELECT 1")
-            resp.body = '{"status": "UP"}'
+            resp.text = '{"status": "UP"}'
         except DatabaseError as e:
             self.container.db_session.rollback()
             info = "Database error. Service will reconnect to the DB automatically. Exception: %s" % e
-            resp.body = '{"status": "DOWN", "info": "%s"}' % info
+            resp.text = '{"status": "DOWN", "info": "%s"}' % info
             logger.exception(info)
         except Exception as e:
-            resp.body = '{"status": "DOWN", "info": "%s"}' % e
+            resp.text = '{"status": "DOWN", "info": "%s"}' % e
             logger.exception("Unexpected exception.")
 
         resp.status = falcon.HTTP_200
