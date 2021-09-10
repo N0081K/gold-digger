@@ -191,7 +191,7 @@ class HealthAliveResource(DatabaseResource):
         resp.status = falcon.HTTP_200
 
 
-class API(falcon.API):
+class API(falcon.App):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.container = di_container(__file__)
