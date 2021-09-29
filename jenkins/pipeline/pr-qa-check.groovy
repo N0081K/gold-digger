@@ -44,12 +44,6 @@ pipeline {
                 }
             }
         }
-
-        stage("Coala") {
-            steps {
-                sh 'docker run --rm -t -v "$(pwd):/app" --workdir=/app coala/base:0.11 coala -d bears --non-interactive --no-color'
-            }
-        }
     }
 
     post {
