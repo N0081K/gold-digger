@@ -44,7 +44,7 @@ def cron(**_):
 
 
 @cli.command("initialize-db", help="Create empty table (drop if exists)")
-def command(**_):
+def initialize_db(**_):
     with di_container(__file__) as di:
         # Ignore PyPrintBear
         print("This will drop & create all tables in '%s'. To continue press 'c'" % DATABASE_NAME)
@@ -56,7 +56,7 @@ def command(**_):
 
 @cli.command("update-all", help="Update rates since origin date (default 2015-01-01)")
 @click.option("--origin-date", default=date(2015, 1, 1), callback=_parse_date, help="Specify date in format 'yyyy-mm-dd'")
-def command(**kwargs):
+def update_all(**kwargs):
     with di_container(__file__) as di:
         logger = di.logger()
         di.exchange_rate_manager.update_all_historical_rates(kwargs["origin_date"], logger)
@@ -66,7 +66,7 @@ def command(**kwargs):
 @click.option("--date", default=date.today(), callback=_parse_date, help="Specify date in format 'yyyy-mm-dd'")
 @click.option("--providers", type=str, help="Specify data providers names separated by comma.")
 @click.option("--exclude-providers", type=str, help="Specify data providers names separated by comma.")
-def command(**kwargs):
+def update(**kwargs):
     with di_container(__file__) as di:
         logger = di.logger()
         if kwargs["providers"]:
@@ -85,7 +85,7 @@ def command(**kwargs):
 @cli.command("api", help="Run API server (simple)")
 @click.option("--host", "-h", default="localhost")
 @click.option("--port", "-p", default=8080)
-def command(**kwargs):
+def api(**kwargs):
     app.simple_server(kwargs["host"], kwargs["port"])
 
 
