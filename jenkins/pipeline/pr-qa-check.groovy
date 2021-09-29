@@ -44,6 +44,19 @@ pipeline {
                 }
             }
         }
+
+        stage("Flake8 check") {
+            steps {
+                script {
+                    String dockerImageName = "gold-digger-flake8"
+                    sh """
+                        docker build --rm -t $dockerImageName --build-arg REQUIREMENTS=-qa-check -f Dockerfile .
+                        docker run --rm --name=${dockerImageName}-${env.BUILD_ID} ${dockerImageName} flake8
+                        docker rmi $dockerImageName
+                    """
+                }
+            }
+        }
     }
 
     post {

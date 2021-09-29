@@ -18,6 +18,8 @@
 FROM python:3.8
 MAINTAINER ROI Hunter
 
+ARG REQUIREMENTS=""
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y libpq-dev locales locales-all
 
@@ -36,9 +38,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR /app
 
 COPY ./requirements.txt .
+COPY ./requirements-dev.txt .
+COPY ./requirements-qa-check.txt .
 
 # Install Python dependencies
-RUN pip install -U pip wheel && pip install -r requirements.txt
+RUN pip install -U pip wheel && pip install -r requirements${REQUIREMENTS}.txt
 
 # Add all files to container
 COPY ./ ./
