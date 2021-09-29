@@ -9,6 +9,9 @@ from ..di import DiContainer
 
 class ContextMiddleware:
     def process_resource(self, req, *_):
+        """
+        :type req: falcon.request.Request
+        """
         req.context.flow_id = DiContainer.flow_id()
 
 

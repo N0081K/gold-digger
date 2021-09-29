@@ -25,11 +25,17 @@ class Provider(metaclass=ABCMeta):
 
     @property
     def base_currency(self):
+        """
+        :rtype: str
+        """
         return self._base_currency
 
     @property
     @abstractmethod
     def name(self):
+        """
+        :rtype: str
+        """
         raise NotImplementedError
 
     @abstractmethod
@@ -101,10 +107,16 @@ class Provider(metaclass=ABCMeta):
             logger.error("%s - Invalid operation: value %s is not a number (currency %s)", self, value, currency)
 
     def set_request_limit_reached(self, logger):
+        """
+        :type logger: gold_digger.utils.ContextLogger
+        """
         logger.warning("%s - Requests limit exceeded.", self)
         self.request_limit_reached = True
 
     def __str__(self):
+        """
+        :rtype: str
+        """
         return self.name
 
     @staticmethod

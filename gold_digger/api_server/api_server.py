@@ -12,6 +12,9 @@ from ..settings import SUPPORTED_CURRENCIES
 
 class DatabaseResource:
     def __init__(self, container):
+        """
+        :type container: gold_digger.di.DiContainer
+        """
         self.container = container
 
 
@@ -193,6 +196,10 @@ class HealthAliveResource(DatabaseResource):
 
 class API(falcon.App):
     def __init__(self, *args, **kwargs):
+        """
+        :type args: list
+        :type kwargs: dict
+        """
         super().__init__(*args, **kwargs)
         self.container = di_container(__file__)
         self.add_route("/intervals", IntervalsRateResource(self.container), suffix="intervals_rate")
@@ -202,6 +209,10 @@ class API(falcon.App):
         self.add_route("/health/alive", HealthAliveResource(self.container), suffix="check_liveness")
 
     def simple_server(self, host, port):
+        """
+        :type host: str
+        :type port: int
+        """
         print("Starting HTTP server at {}:{}".format(host, port))  # noqa: T001
         server = simple_server.make_server(host, port, self)
         server.serve_forever()

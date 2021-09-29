@@ -20,11 +20,17 @@ def _parse_date(ctx, param, value):
 
 @click.group()
 def cli():
+    """
+    Define CLI click group.
+    """
     pass
 
 
 @cli.command("cron", help="Run cron jobs")
 def cron(**_):
+    """
+    Run cron jobs.
+    """
     with di_container(__file__) as di:
         logger = di.logger()
         cron_tab = CronTab(
@@ -44,6 +50,9 @@ def cron(**_):
 
 @cli.command("initialize-db", help="Create empty table (drop if exists)")
 def initialize_db(**_):
+    """
+    Create empty  table (drop if exists).
+    """
     with di_container(__file__) as di:
         print("This will drop & create all tables in '%s'. To continue press 'c'" % DATABASE_NAME)  # noqa: T001
         if input() != "c":
@@ -55,6 +64,9 @@ def initialize_db(**_):
 @cli.command("update-all", help="Update rates since origin date (default 2015-01-01)")
 @click.option("--origin-date", default=date(2015, 1, 1), callback=_parse_date, help="Specify date in format 'yyyy-mm-dd'")
 def update_all(**kwargs):
+    """
+    Update rates since origin date (default 2015-01-01).
+    """
     with di_container(__file__) as di:
         logger = di.logger()
         di.exchange_rate_manager.update_all_historical_rates(kwargs["origin_date"], logger)
@@ -65,6 +77,9 @@ def update_all(**kwargs):
 @click.option("--providers", type=str, help="Specify data providers names separated by comma.")
 @click.option("--exclude-providers", type=str, help="Specify data providers names separated by comma.")
 def update(**kwargs):
+    """
+    Updates rates of specified day (default today).
+    """
     with di_container(__file__) as di:
         logger = di.logger()
         if kwargs["providers"]:
@@ -84,6 +99,9 @@ def update(**kwargs):
 @click.option("--host", "-h", default="localhost")
 @click.option("--port", "-p", default=8080)
 def api(**kwargs):
+    """
+    Run API server (simple).
+    """
     app.simple_server(kwargs["host"], kwargs["port"])
 
 
