@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from sqlalchemy import BigInteger, Column, DECIMAL, Date, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import BigInteger, Column, Date, DECIMAL, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
