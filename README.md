@@ -47,6 +47,11 @@ For running the tests simply use:
 * `py.test --database-tests --db-connection postgresql://postgres:postgres@localhost/golddigger-test` (with custom db connection) which runs also tests marked as `@database_test`.
  These tests are executed against real test database.
 
+### Tests & QA
+- `pytest` runs unit tests (use `--runslow` for database tests)
+- `isort .` sorts imports
+- `flake8` checks code quality
+
 
 ## API endpoints
 
