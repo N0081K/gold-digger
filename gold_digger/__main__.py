@@ -39,15 +39,13 @@ def cron(**_):
         logger.info("Cron started. Commands:\n{}\n---".format("\n".join(list(map(str, cron_tab.crons)))))
 
         for result in cron_tab.run_scheduler():
-            # Ignore PyPrintBear
-            print(result)
+            print(result)  # noqa: T001
 
 
 @cli.command("initialize-db", help="Create empty table (drop if exists)")
 def initialize_db(**_):
     with di_container(__file__) as di:
-        # Ignore PyPrintBear
-        print("This will drop & create all tables in '%s'. To continue press 'c'" % DATABASE_NAME)
+        print("This will drop & create all tables in '%s'. To continue press 'c'" % DATABASE_NAME)  # noqa: T001
         if input() != "c":
             return
         Base.metadata.drop_all(di.db_connection)

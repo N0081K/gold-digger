@@ -202,7 +202,6 @@ class API(falcon.App):
         self.add_route("/health/alive", HealthAliveResource(self.container), suffix="check_liveness")
 
     def simple_server(self, host, port):
-        # Ignore PyPrintBear
-        print("Starting HTTP server at {}:{}".format(host, port))
+        print("Starting HTTP server at {}:{}".format(host, port))  # noqa: T001
         server = simple_server.make_server(host, port, self)
         server.serve_forever()
