@@ -10,7 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from . import settings
-from .data_providers import *
+from .data_providers import CurrencyLayer, Fixer, Frankfurter, GrandTrunk, Yahoo
 from .database.dao_exchange_rate import DaoExchangeRate
 from .database.dao_provider import DaoProvider
 from .managers.exchange_rate_manager import ExchangeRateManager
