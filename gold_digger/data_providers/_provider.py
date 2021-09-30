@@ -97,6 +97,8 @@ class Provider(metaclass=ABCMeta):
         except RequestException as e:
             logger.error("%s - Exception: %s, URL: %s, Params: %s", self, e, url, params)
 
+        return None
+
     def _to_decimal(self, value, currency=None, *, logger):
         """
         :type value: str | float

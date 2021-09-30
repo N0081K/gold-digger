@@ -143,3 +143,5 @@ class Frankfurter(Provider):
             return response
         except RequestException as e:
             logger.error("%s - Exception: %s, URL: %s, Params: %s", self, e, url, params)
+
+        return None
