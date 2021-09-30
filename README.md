@@ -50,6 +50,7 @@ For running the tests simply use:
 ### Tests & QA
 - `pytest` runs unit tests (use `--runslow` for database tests)
 - `isort .` sorts imports
+- `black .` formats code
 - `flake8` checks code quality
 
 
