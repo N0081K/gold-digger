@@ -3,6 +3,7 @@ from datetime import date, datetime
 from operator import attrgetter
 
 from cachetools import cachedmethod, keys
+from requests import RequestException
 
 from ._provider import Provider
 
@@ -16,7 +17,17 @@ class GrandTrunk(Provider):
     BASE_URL = "http://currencies.apps.grandtrunk.net"
     name = "grandtrunk"
 
+    def __init__(self, base_currency, http_user_agent):
+        """
+        :type base_currency: str
+        :type http_user_agent: str
+        """
+        super().__init__(base_currency, http_user_agent)
+
+        self.has_request_limit = True
+
     @cachedmethod(cache=attrgetter("_cache"), key=lambda date_of_exchange, _: keys.hashkey(date_of_exchange))
+    @Provider.check_request_limit(return_value=set())
     def get_supported_currencies(self, date_of_exchange, logger):
         """
         :type date_of_exchange: date
@@ -25,14 +36,23 @@ class GrandTrunk(Provider):
         """
         currencies = set()
         response = self._get(f"{self.BASE_URL}/currencies/{date_of_exchange.strftime('%Y-%m-%d')}", logger=logger)
-        if response:
-            currencies = set(response.text.split("\n"))
+        if not response:
+            return currencies
+        if response.status_code == self.STATUS_CODE_503_SERVICE_UNAVAILABLE:
+            self.set_request_limit_reached(logger)
+            return currencies
+        if response.status_code != self.STATUS_CODE_200_OK:
+            return currencies
+
+        currencies = set(response.text.split("\n"))
         if currencies:
             logger.debug("%s - Supported currencies: %s", self, currencies)
         else:
             logger.error("%s - Supported currencies not found.", self)
+
         return currencies
 
+    @Provider.check_request_limit(return_value=None)
     def get_by_date(self, date_of_exchange, currency, logger):
         """
         :type date_of_exchange: date
@@ -44,9 +64,17 @@ class GrandTrunk(Provider):
         logger.debug("%s - Requesting for %s (%s)", self, currency, date_str, extra={"currency": currency, "date": date_str})
 
         response = self._get(f"{self.BASE_URL}/getrate/{date_str}/{self.base_currency}/{currency}", logger=logger)
-        if response:
-            return self._to_decimal(response.text.strip(), currency, logger=logger)
+        if not response:
+            return None
+        if response.status_code == self.STATUS_CODE_503_SERVICE_UNAVAILABLE:
+            self.set_request_limit_reached(logger)
+            return None
+        if response.status_code != self.STATUS_CODE_200_OK:
+            return None
 
+        return self._to_decimal(response.text.strip(), currency, logger=logger)
+
+    @Provider.check_request_limit(return_value={})
     def get_all_by_date(self, date_of_exchange, currencies, logger):
         """
         :type date_of_exchange: date
@@ -59,14 +87,25 @@ class GrandTrunk(Provider):
         day_rates = {}
         supported_currencies = self.get_supported_currencies(date_of_exchange, logger)
         for currency in currencies:
-            if currency in supported_currencies:
-                response = self._get(f"{self.BASE_URL}/getrate/{date_of_exchange}/{self.base_currency}/{currency}", logger=logger)
-                if response:
-                    decimal_value = self._to_decimal(response.text.strip(), currency, logger=logger)
-                    if decimal_value:
-                        day_rates[currency] = decimal_value
+            if currency not in supported_currencies:
+                continue
+
+            response = self._get(f"{self.BASE_URL}/getrate/{date_of_exchange}/{self.base_currency}/{currency}", logger=logger)
+            if not response:
+                continue
+            if response.status_code == self.STATUS_CODE_503_SERVICE_UNAVAILABLE:
+                self.set_request_limit_reached(logger)
+                return {}
+            if response.status_code != self.STATUS_CODE_200_OK:
+                continue
+
+            decimal_value = self._to_decimal(response.text.strip(), currency, logger=logger)
+            if decimal_value:
+                day_rates[currency] = decimal_value
+
         return day_rates
 
+    @Provider.check_request_limit(return_value={})
     def get_historical(self, origin_date, currencies, logger):
         """
         :type origin_date: date
@@ -78,6 +117,14 @@ class GrandTrunk(Provider):
         origin_date_string = origin_date.strftime("%Y-%m-%d")
         for currency in currencies:
             response = self._get(f"{self.BASE_URL}/getrange/{origin_date_string}/{date.today()}/{self.base_currency}/{currency}", logger=logger)
+            if not response:
+                continue
+            if response.status_code == self.STATUS_CODE_503_SERVICE_UNAVAILABLE:
+                self.set_request_limit_reached(logger)
+                return {}
+            if response.status_code != self.STATUS_CODE_200_OK:
+                continue
+
             records = response.text.strip().split("\n") if response else []
             for record in records:
                 record = record.rstrip()
@@ -91,4 +138,21 @@ class GrandTrunk(Provider):
                     decimal_value = self._to_decimal(exchange_rate_string, currency, logger=logger)
                     if decimal_value:
                         day_rates[day][currency] = decimal_value
+
         return day_rates
+
+    def _get(self, url, params=None, *, logger):
+        """
+        :type url: str
+        :type params: dict[str, str]
+        :type logger: gold_digger.utils.ContextLogger
+        :rtype: requests.Response | None
+        """
+        try:
+            self._http_session.cookies.clear()
+            response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
+            if response.status_code != self.STATUS_CODE_200_OK:
+                logger.error("%s - Status code: %s, URL: %s, Params: %s", self, response.status_code, url, params)
+            return response
+        except RequestException as e:
+            logger.error("%s - Exception: %s, URL: %s, Params: %s", self, e, url, params)

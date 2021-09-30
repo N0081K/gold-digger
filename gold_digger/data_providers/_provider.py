@@ -11,6 +11,9 @@ from requests import RequestException, Session
 class Provider(metaclass=ABCMeta):
     DEFAULT_REQUEST_TIMEOUT = 15  # 15 seconds for both connect & read timeouts
 
+    STATUS_CODE_200_OK = 200
+    STATUS_CODE_503_SERVICE_UNAVAILABLE = 503
+
     def __init__(self, base_currency, http_user_agent):
         """
         :type base_currency: str
