@@ -41,7 +41,7 @@ def test_insert_exchange_rate_to_db(dao_exchange_rate, dao_provider, logger):
     records = [
         {"date": date.today(), "currency": "USD", "provider_id": provider1.id, "rate": Decimal(1)},
         {"date": date.today(), "currency": "USD", "provider_id": provider2.id, "rate": Decimal(1)},
-        {"date": date.today(), "currency": "USD", "provider_id": provider1.id, "rate": Decimal(1)}
+        {"date": date.today(), "currency": "USD", "provider_id": provider1.id, "rate": Decimal(1)},
     ]
     dao_exchange_rate.insert_exchange_rate_to_db(records, logger)
 

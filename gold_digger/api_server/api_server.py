@@ -12,6 +12,9 @@ from ..settings import SUPPORTED_CURRENCIES
 
 class DatabaseResource:
     def __init__(self, container):
+        """
+        :type container: gold_digger.di.DiContainer
+        """
         self.container = container
 
 
@@ -58,7 +61,7 @@ class IntervalsRateResource(DatabaseResource):
                 "from_currency": from_currency,
                 "to_currency": to_currency,
                 "exchange_rates": exchange_rate_in_intervals,
-            }
+            },
         )
 
 
@@ -104,8 +107,8 @@ class DateRateResource(DatabaseResource):
                 "date": date_of_exchange.strftime("%Y-%m-%d"),
                 "from_currency": from_currency,
                 "to_currency": to_currency,
-                "exchange_rate": str(exchange_rate)
-            }
+                "exchange_rate": str(exchange_rate),
+            },
         )
 
 
@@ -154,8 +157,8 @@ class RangeRateResource(DatabaseResource):
                 "end_date": end_date.strftime(format="%Y-%m-%d"),
                 "from_currency": from_currency,
                 "to_currency": to_currency,
-                "exchange_rate": str(exchange_rate)
-            }
+                "exchange_rate": str(exchange_rate),
+            },
         )
 
 
@@ -193,6 +196,10 @@ class HealthAliveResource(DatabaseResource):
 
 class API(falcon.App):
     def __init__(self, *args, **kwargs):
+        """
+        :type args: list
+        :type kwargs: dict
+        """
         super().__init__(*args, **kwargs)
         self.container = di_container(__file__)
         self.add_route("/intervals", IntervalsRateResource(self.container), suffix="intervals_rate")
@@ -202,7 +209,10 @@ class API(falcon.App):
         self.add_route("/health/alive", HealthAliveResource(self.container), suffix="check_liveness")
 
     def simple_server(self, host, port):
-        # Ignore PyPrintBear
-        print("Starting HTTP server at {}:{}".format(host, port))
+        """
+        :type host: str
+        :type port: int
+        """
+        print("Starting HTTP server at {}:{}".format(host, port))  # noqa: T001
         server = simple_server.make_server(host, port, self)
         server.serve_forever()

@@ -10,7 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from . import settings
-from .data_providers import *
+from .data_providers import CurrencyLayer, Fixer, Frankfurter, GrandTrunk, Yahoo
 from .database.dao_exchange_rate import DaoExchangeRate
 from .database.dao_provider import DaoProvider
 from .managers.exchange_rate_manager import ExchangeRateManager
@@ -20,15 +20,26 @@ from .utils.custom_logging import IncludeFilter
 
 class DiContainer:
     def __init__(self, main_file_path):
+        """
+        :type main_file_path: str
+        """
         self._file_path = normpath(abspath(main_file_path))
 
         self._db_connection = None
         self._db_session = None
 
     def __enter__(self):
+        """
+        :rtype: gold_digger.di.DiContainer
+        """
         return self
 
-    def __exit__(self, e, _, traceback):
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        :type exc_type: None | type[BaseException]
+        :type exc_val: None | BaseException
+        :type exc_tb: None | traceback
+        """
         if self._db_session is not None:
             self._db_session.remove()
             self._db_session = None
@@ -38,22 +49,33 @@ class DiContainer:
 
     @staticmethod
     def flow_id():
+        """
+        :rtype: str
+        """
         return str(uuid4())
 
     @service
     def base_dir(self):
+        """
+        :rtype: str
+        """
         return dirname(self._file_path)
 
     @service
     def db_connection(self):
-        self._db_connection = create_engine("{dialect}://{user}:{password}@{host}:{port}/{name}".format(
-            dialect=settings.DATABASE_DIALECT,
-            user=settings.DATABASE_USER,
-            password=settings.DATABASE_PASSWORD,
-            host=settings.DATABASE_HOST,
-            port=settings.DATABASE_PORT,
-            name=settings.DATABASE_NAME
-        ))
+        """
+        :rtype: sqlalchemy.engine.base.Engine
+        """
+        self._db_connection = create_engine(
+            "{dialect}://{user}:{password}@{host}:{port}/{name}".format(
+                dialect=settings.DATABASE_DIALECT,
+                user=settings.DATABASE_USER,
+                password=settings.DATABASE_PASSWORD,
+                host=settings.DATABASE_HOST,
+                port=settings.DATABASE_PORT,
+                name=settings.DATABASE_NAME,
+            ),
+        )
         return self._db_connection
 
     @service
@@ -66,10 +88,16 @@ class DiContainer:
 
     @property
     def base_currency(self):
+        """
+        :rtype: str
+        """
         return "USD"
 
     @service
     def data_providers(self):
+        """
+        :rtype: dict[str, gold_digger.data_providers.Provider]
+        """
         providers = (
             GrandTrunk(self.base_currency, settings.USER_AGENT_HTTP_HEADER),
             CurrencyLayer(self.base_currency, settings.USER_AGENT_HTTP_HEADER, settings.SECRETS_CURRENCY_LAYER_ACCESS_KEY, self.logger()),
@@ -81,6 +109,9 @@ class DiContainer:
 
     @service
     def exchange_rate_manager(self):
+        """
+        :rtype: gold_digger.managers.exchange_rate_manager.ExchangeRateManager
+        """
         return ExchangeRateManager(
             DaoExchangeRate(self.db_session),
             DaoProvider(self.db_session),
@@ -135,8 +166,10 @@ class DiContainer:
         logger_ = logging.getLogger()
         if settings.LOGGING_GRAYLOG_ENABLED:
             handler = graypy.GELFRabbitHandler(
-                url=f"amqp://{settings.LOGGING_AMQP_USERNAME}:{quote(settings.LOGGING_AMQP_PASSWORD, safe='')}@"
-                    f"{settings.LOGGING_AMQP_HOST}:{settings.LOGGING_AMQP_PORT}",
+                url=(
+                    f"amqp://{settings.LOGGING_AMQP_USERNAME}:{quote(settings.LOGGING_AMQP_PASSWORD, safe='')}@"
+                    f"{settings.LOGGING_AMQP_HOST}:{settings.LOGGING_AMQP_PORT}"
+                ),
                 exchange="gold-digger",
                 exchange_type="direct",
                 routing_key="gold-digger",

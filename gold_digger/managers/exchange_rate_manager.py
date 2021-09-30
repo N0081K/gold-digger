@@ -176,7 +176,7 @@ class ExchangeRateManager:
         :rtype: list[tuple[int, int, Decimal]]
         """
         if currency == self._base_currency:
-            return [("BASE", 1, ExchangeRate.base(self._base_currency).rate), ]
+            return [("BASE", 1, ExchangeRate.base(self._base_currency).rate)]
 
         return self._dao_exchange_rate.get_sum_of_rates_in_period(start_date, end_date, currency)
 
@@ -204,17 +204,34 @@ class ExchangeRateManager:
 
             logger.info(
                 "Sum of currencies %s (%s records) = %s, %s (%s records) = %s in period %s - %s by (%s, %s)",
-                from_currency, from_count, from_sum, to_currency, to_count, to_sum, start_date, end_date, from_provider, to_provider
+                from_currency,
+                from_count,
+                from_sum,
+                to_currency,
+                to_count,
+                to_sum,
+                start_date,
+                end_date,
+                from_provider,
+                to_provider,
             )
             if from_count != number_of_days and from_currency != self._base_currency:
                 logger.warning(
                     "Provider %s is missing %s days with currency %s while range request on %s - %s",
-                    from_provider, number_of_days - from_count, from_currency, start_date, end_date
+                    from_provider,
+                    number_of_days - from_count,
+                    from_currency,
+                    start_date,
+                    end_date,
                 )
             if to_count != number_of_days and to_currency != self._base_currency:
                 logger.warning(
                     "Provider %s is missing %s days with currency %s while range request on %s - %s",
-                    to_provider, number_of_days - to_count, to_currency, start_date, end_date
+                    to_provider,
+                    number_of_days - to_count,
+                    to_currency,
+                    start_date,
+                    end_date,
                 )
 
             if from_count and from_sum and to_count and to_sum:

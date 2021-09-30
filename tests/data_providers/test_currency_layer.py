@@ -59,4 +59,4 @@ def test_currency_layer__reach_monthly_limit(currency_layer, response, logger):
 
     assert currency_layer.request_limit_reached is False
     assert currency_layer._get.call_count == 2
-    assert rate == Decimal('1')
+    assert rate == Decimal("1")

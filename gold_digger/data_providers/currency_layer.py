@@ -13,6 +13,7 @@ class CurrencyLayer(Provider):
     Real-time service with free plan for 250 requests per month.
     Implicit base currency is USD.
     """
+
     BASE_URL = "http://www.apilayer.net/api/live?access_key=%s"
     name = "currency_layer"
 
@@ -73,7 +74,10 @@ class CurrencyLayer(Provider):
             return None
         else:
             logger.warning(
-                "%s - Unsuccessful request. Error: %s", self, response.get("error", {}).get("info"), extra={"currency": currency, "date": date_str}
+                "%s - Unsuccessful request. Error: %s",
+                self,
+                response.get("error", {}).get("info"),
+                extra={"currency": currency, "date": date_str},
             )
             return None
 

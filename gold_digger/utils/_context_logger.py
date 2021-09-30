@@ -10,9 +10,17 @@ class ContextLogger(LoggerAdapter):
 
     @property
     def flow_id(self):
+        """
+        :rtype: str
+        """
         return self.extra.get("flow_id")
 
     def process(self, msg, kwargs):
+        """
+        :type msg: str
+        :type kwargs: dict
+        :rtype: tuple[str, dict]
+        """
         extra = self.extra.copy()
         extra.update(kwargs.get("extra") or {})
         extra["message_hash"] = md5(msg.encode("utf-8")).hexdigest()
@@ -20,6 +28,10 @@ class ContextLogger(LoggerAdapter):
         return msg, kwargs
 
     def with_context(self, **extra):
+        """
+        :type extra: dict
+        :rtype: gold_digger.utils.ContextLogger
+        """
         extra_ = self.extra.copy()
         extra_.update(extra)
         return ContextLogger(self.logger, extra_)

@@ -12,6 +12,7 @@ class Fixer(Provider):
     We have to convert exchange rates to base currency (USD) before returning the rates from the provider.
     https://fixer.io/documentation
     """
+
     BASE_URL = "http://data.fixer.io/api/{path}?access_key=%s"
     name = "fixer.io"
 

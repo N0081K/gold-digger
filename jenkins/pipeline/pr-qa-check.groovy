@@ -45,9 +45,16 @@ pipeline {
             }
         }
 
-        stage("Coala") {
+        stage("Flake8 check") {
             steps {
-                sh 'docker run --rm -t -v "$(pwd):/app" --workdir=/app coala/base:0.11 coala -d bears --non-interactive --no-color'
+                script {
+                    String dockerImageName = "gold-digger-flake8"
+                    sh """
+                        docker build --rm -t $dockerImageName --build-arg REQUIREMENTS=-qa-check -f Dockerfile .
+                        docker run --rm --name=${dockerImageName}-${env.BUILD_ID} ${dockerImageName} flake8
+                        docker rmi $dockerImageName
+                    """
+                }
             }
         }
     }

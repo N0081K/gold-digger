@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from sqlalchemy import BigInteger, Column, DECIMAL, Date, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import BigInteger, Column, Date, DECIMAL, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -17,9 +17,7 @@ class Provider(Base):
 
 class ExchangeRate(Base):
     __tablename__ = "USD_exchange_rates"
-    __table_args__ = (
-        UniqueConstraint("date", "provider_id", "currency"),
-    )
+    __table_args__ = (UniqueConstraint("date", "provider_id", "currency"),)
 
     id = Column(BigInteger, primary_key=True)
     date = Column(Date)
@@ -35,5 +33,5 @@ class ExchangeRate(Base):
         """
         return cls(
             currency=base_currency,
-            rate=Decimal(1.0)
+            rate=Decimal(1.0),
         )
