@@ -14,6 +14,7 @@ class Frankfurter(Provider):
 
     https://www.frankfurter.app/docs/
     """
+
     BASE_URL = "https://api.frankfurter.app/{date}"
     name = "frankfurter"
 

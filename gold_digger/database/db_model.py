@@ -17,9 +17,7 @@ class Provider(Base):
 
 class ExchangeRate(Base):
     __tablename__ = "USD_exchange_rates"
-    __table_args__ = (
-        UniqueConstraint("date", "provider_id", "currency"),
-    )
+    __table_args__ = (UniqueConstraint("date", "provider_id", "currency"),)
 
     id = Column(BigInteger, primary_key=True)
     date = Column(Date)

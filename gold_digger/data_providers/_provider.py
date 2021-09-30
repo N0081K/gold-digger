@@ -133,6 +133,7 @@ class Provider(metaclass=ABCMeta):
 
         :type return_value: dict | set | None
         """
+
         def decorator(func):
             @wraps(func)
             def wrapper(*args, **kwargs):

@@ -66,14 +66,16 @@ class DiContainer:
         """
         :rtype: sqlalchemy.engine.base.Engine
         """
-        self._db_connection = create_engine("{dialect}://{user}:{password}@{host}:{port}/{name}".format(
-            dialect=settings.DATABASE_DIALECT,
-            user=settings.DATABASE_USER,
-            password=settings.DATABASE_PASSWORD,
-            host=settings.DATABASE_HOST,
-            port=settings.DATABASE_PORT,
-            name=settings.DATABASE_NAME,
-        ))
+        self._db_connection = create_engine(
+            "{dialect}://{user}:{password}@{host}:{port}/{name}".format(
+                dialect=settings.DATABASE_DIALECT,
+                user=settings.DATABASE_USER,
+                password=settings.DATABASE_PASSWORD,
+                host=settings.DATABASE_HOST,
+                port=settings.DATABASE_PORT,
+                name=settings.DATABASE_NAME,
+            ),
+        )
         return self._db_connection
 
     @service
@@ -164,8 +166,10 @@ class DiContainer:
         logger_ = logging.getLogger()
         if settings.LOGGING_GRAYLOG_ENABLED:
             handler = graypy.GELFRabbitHandler(
-                url=f"amqp://{settings.LOGGING_AMQP_USERNAME}:{quote(settings.LOGGING_AMQP_PASSWORD, safe='')}@"
-                    f"{settings.LOGGING_AMQP_HOST}:{settings.LOGGING_AMQP_PORT}",
+                url=(
+                    f"amqp://{settings.LOGGING_AMQP_USERNAME}:{quote(settings.LOGGING_AMQP_PASSWORD, safe='')}@"
+                    f"{settings.LOGGING_AMQP_HOST}:{settings.LOGGING_AMQP_PORT}"
+                ),
                 exchange="gold-digger",
                 exchange_type="direct",
                 routing_key="gold-digger",

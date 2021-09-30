@@ -157,7 +157,13 @@ def test_get_or_update_rate_by_date__today_before_cron_update(dao_exchange_rate,
 
 
 def test_get_or_update_rate_by_date__today_before_cron_update_no_yesterday_rates(
-    dao_exchange_rate, dao_provider, currency_layer, grandtrunk, base_currency, currencies, logger,
+    dao_exchange_rate,
+    dao_provider,
+    currency_layer,
+    grandtrunk,
+    base_currency,
+    currencies,
+    logger,
 ):
     """
     Get all rates by date.
@@ -191,7 +197,14 @@ def test_get_or_update_rate_by_date__today_before_cron_update_no_yesterday_rates
 
 
 def test_get_or_update_rate_by_date__no_api_requests_for_historical_data_on_limited_providers(
-    dao_exchange_rate, dao_provider, fixer, currency_layer, grandtrunk, base_currency, currencies, logger,
+    dao_exchange_rate,
+    dao_provider,
+    fixer,
+    currency_layer,
+    grandtrunk,
+    base_currency,
+    currencies,
+    logger,
 ):
     """
     In case historical data are requested and they are not in database we don't want to request API if the provider has request limit

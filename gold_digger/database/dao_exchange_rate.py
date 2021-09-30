@@ -33,7 +33,8 @@ class DaoExchangeRate:
 
         if duplicates:
             logger.info(
-                "Exchange rates of following currencies were not updated because rates from this provider are already in DB. Currencies: %s", duplicates,
+                "Exchange rates of following currencies were not updated because rates from this provider are already in DB. Currencies: %s",
+                duplicates,
             )
 
         self.db_session.commit()
@@ -44,9 +45,13 @@ class DaoExchangeRate:
         :type currency: str
         :rtype: list[gold_digger.database.db_model.ExchangeRate]
         """
-        return self.db_session.query(ExchangeRate).filter(
-            and_(ExchangeRate.date == date_of_exchange, ExchangeRate.currency == currency),
-        ).all()
+        return (
+            self.db_session.query(ExchangeRate)
+            .filter(
+                and_(ExchangeRate.date == date_of_exchange, ExchangeRate.currency == currency),
+            )
+            .all()
+        )
 
     def get_rate_by_date_currency_provider(self, date_of_exchange, currency, provider_name):
         """
@@ -55,9 +60,13 @@ class DaoExchangeRate:
         :type provider_name: str
         :rtype: gold_digger.database.db_model.ExchangeRate
         """
-        return self.db_session.query(ExchangeRate).filter(
-            and_(ExchangeRate.date == date_of_exchange, ExchangeRate.currency == currency, ExchangeRate.provider.has(name=provider_name)),
-        ).first()
+        return (
+            self.db_session.query(ExchangeRate)
+            .filter(
+                and_(ExchangeRate.date == date_of_exchange, ExchangeRate.currency == currency, ExchangeRate.provider.has(name=provider_name)),
+            )
+            .first()
+        )
 
     def insert_new_rate(self, date_of_exchange, db_provider, currency, rate):
         """
@@ -88,8 +97,8 @@ class DaoExchangeRate:
         :type currency: str
         :rtype: list[tuple[int, int, decimal.Decimal]]
         """
-        return self.db_session\
-            .query(ExchangeRate.provider_id, func.count(), func.sum(ExchangeRate.rate))\
+        return (
+            self.db_session.query(ExchangeRate.provider_id, func.count(), func.sum(ExchangeRate.rate))
             .filter(
                 and_(
                     ExchangeRate.date >= start_date,
@@ -97,7 +106,8 @@ class DaoExchangeRate:
                     ExchangeRate.currency == currency,
                     ExchangeRate.rate.isnot(None),
                 ),
-            )\
-            .group_by(ExchangeRate.provider_id)\
-            .order_by(ExchangeRate.provider_id)\
+            )
+            .group_by(ExchangeRate.provider_id)
+            .order_by(ExchangeRate.provider_id)
             .all()
+        )

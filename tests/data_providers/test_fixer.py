@@ -29,7 +29,7 @@ def test_fixer_conversion_to_base_currency(fixer, logger):
     }
     """
     converted_rate = fixer._conversion_to_base_currency(Decimal(1.125138), Decimal(319.899055), logger)
-    assert converted_rate == Decimal('284.3198389886396014034013616')
+    assert converted_rate == Decimal("284.3198389886396014034013616")
 
 
 def test_fixer_reach_monthly_limit(fixer, response, logger):
@@ -85,4 +85,4 @@ def test_fixer_reach_monthly_limit(fixer, response, logger):
 
     assert fixer.request_limit_reached is False
     assert fixer._get.call_count == 2
-    assert rate == Decimal('1')
+    assert rate == Decimal("1")

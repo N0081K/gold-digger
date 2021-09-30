@@ -130,7 +130,7 @@ def test_get_by_date__base_currency_is_same_as_target_currency(frankfurter, base
 
     converted_rates = frankfurter.get_by_date(date(2019, 4, 16), base_currency, logger)
 
-    assert converted_rates == Decimal('1')
+    assert converted_rates == Decimal("1")
 
 
 def test_get_all_by_date__available(frankfurter, response, logger):

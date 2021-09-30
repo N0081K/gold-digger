@@ -12,6 +12,7 @@ class GrandTrunk(Provider):
     Service offers day exchange rates based on Federal Reserve and European Central Bank.
     It is currently free for use in low-volume and non-commercial settings.
     """
+
     BASE_URL = "http://currencies.apps.grandtrunk.net"
     name = "grandtrunk"
 
