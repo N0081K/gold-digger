@@ -21,7 +21,7 @@ class Yahoo(Provider):
         self._supported_currencies = supported_currencies - {
             "ATS", "BEF", "BYR", "CUC", "CYP", "DEM", "EEK", "ESP", "FIM", "FRF", "GGP", "GRD", "IEP",
             "IMP", "ITL", "JEP", "KGS", "LTL", "LUF", "LVL", "MCF", "MGA", "MTL", "NLG", "PTE", "SIT",
-            "SML", "VAL", "VEB", "VEF", "ZMK", "ZWL"
+            "SML", "VAL", "VEB", "VEF", "ZMK", "ZWL",
         }
 
     def get_supported_currencies(self, date_of_exchange=date.today(), *_):

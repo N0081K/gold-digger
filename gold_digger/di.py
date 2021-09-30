@@ -72,7 +72,7 @@ class DiContainer:
             password=settings.DATABASE_PASSWORD,
             host=settings.DATABASE_HOST,
             port=settings.DATABASE_PORT,
-            name=settings.DATABASE_NAME
+            name=settings.DATABASE_NAME,
         ))
         return self._db_connection
 

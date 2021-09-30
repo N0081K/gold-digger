@@ -3,6 +3,6 @@ from .helpers import ContextMiddleware
 
 app = API(
     middleware=[
-        ContextMiddleware()
-    ]
+        ContextMiddleware(),
+    ],
 )

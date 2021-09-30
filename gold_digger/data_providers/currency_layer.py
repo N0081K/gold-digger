@@ -73,7 +73,7 @@ class CurrencyLayer(Provider):
             return None
         else:
             logger.warning(
-                "%s - Unsuccessful request. Error: %s", self, response.get("error", {}).get("info"), extra={"currency": currency, "date": date_str}
+                "%s - Unsuccessful request. Error: %s", self, response.get("error", {}).get("info"), extra={"currency": currency, "date": date_str},
             )
             return None
 

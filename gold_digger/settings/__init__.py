@@ -12,7 +12,7 @@ elif PROFILE == "local":
         from ._settings_local import *
     except ImportError:
         raise ImproperlyConfigured(
-            f"Local configuration not found. Create file _settings_local.py in {path.abspath(path.join(__file__, path.pardir))} directory according to README."
+            f"Local configuration not found. Create file _settings_local.py in {path.abspath(path.join(__file__, path.pardir))} directory according to README.",
         )
 else:
     raise ValueError(f"Unsupported settings profile. Got: {PROFILE}. Use one of: master, local.")

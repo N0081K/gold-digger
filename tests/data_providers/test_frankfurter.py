@@ -147,7 +147,7 @@ def test_get_all_by_date__available(frankfurter, response, logger):
     converted_rates = frankfurter.get_all_by_date(date(2019, 4, 15), {"CZK", "EUR"}, logger)
     assert converted_rates == {
         "CZK": Decimal(22.6509325555),
-        "EUR": Decimal(0.8839388314)
+        "EUR": Decimal(0.8839388314),
     }
 
 
@@ -167,7 +167,7 @@ def test_get_all_by_date__date_unavailable(frankfurter, response, logger):
     converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {"CZK", "EUR"}, logger)
     assert converted_rates == {
         "CZK": Decimal(22.6509325555),
-        "EUR": Decimal(0.8839388314)
+        "EUR": Decimal(0.8839388314),
     }
 
 

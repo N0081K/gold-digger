@@ -34,7 +34,7 @@ SUPPORTED_CURRENCIES = {
     "SDG", "SEK", "SGD", "SHP", "SIT", "SLL", "SML", "SOS", "SRD", "STD", "SYP", "SZL", "THB",
     "TJS", "TMT", "TND", "TOP", "TRY", "TTD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS",
     "VAL", "VEB", "VEF", "VND", "VUV", "WST", "XAF", "XAG", "XAU", "XCD", "XCP", "XDR", "XOF",
-    "XPD", "XPF", "XPT", "YER", "ZAR", "ZMK", "ZMW", "ZWL"
+    "XPD", "XPF", "XPT", "YER", "ZAR", "ZMK", "ZMW", "ZWL",
 }
 
 SECRETS_CURRENCY_LAYER_ACCESS_KEY = get_env("secrets_currency_layer_access_key", default="")

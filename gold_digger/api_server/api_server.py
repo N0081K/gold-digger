@@ -61,7 +61,7 @@ class IntervalsRateResource(DatabaseResource):
                 "from_currency": from_currency,
                 "to_currency": to_currency,
                 "exchange_rates": exchange_rate_in_intervals,
-            }
+            },
         )
 
 
@@ -107,8 +107,8 @@ class DateRateResource(DatabaseResource):
                 "date": date_of_exchange.strftime("%Y-%m-%d"),
                 "from_currency": from_currency,
                 "to_currency": to_currency,
-                "exchange_rate": str(exchange_rate)
-            }
+                "exchange_rate": str(exchange_rate),
+            },
         )
 
 
@@ -157,8 +157,8 @@ class RangeRateResource(DatabaseResource):
                 "end_date": end_date.strftime(format="%Y-%m-%d"),
                 "from_currency": from_currency,
                 "to_currency": to_currency,
-                "exchange_rate": str(exchange_rate)
-            }
+                "exchange_rate": str(exchange_rate),
+            },
         )
 
 

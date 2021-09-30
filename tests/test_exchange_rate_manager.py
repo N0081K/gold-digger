@@ -23,7 +23,7 @@ def dao_provider():
     def _get_or_create_provider_by_name(name):
         return {
             "currency_layer": Provider(id=1, name="currency_layer"),
-            "grandtrunk": Provider(id=2, name="grandtrunk")
+            "grandtrunk": Provider(id=2, name="grandtrunk"),
         }.get(name)
 
     m.get_or_create_provider_by_name.side_effect = _get_or_create_provider_by_name
@@ -74,7 +74,7 @@ def test_update_all_rates_by_date(dao_exchange_rate, dao_provider, currency_laye
     assert provider_name == currency_layer.name
     assert sorted(actual_records, key=lambda x: x["currency"]) == [
         {"provider_id": 1, "date": _date, "currency": "EUR", "rate": Decimal(0.77)},
-        {"provider_id": 1, "date": _date, "currency": "USD", "rate": Decimal(1)}
+        {"provider_id": 1, "date": _date, "currency": "USD", "rate": Decimal(1)},
     ]
 
 
@@ -91,10 +91,10 @@ def test_get_or_update_rate_by_date(dao_exchange_rate, dao_provider, currency_la
 
     grandtrunk.get_by_date.return_value = Decimal(0.75)
     dao_exchange_rate.get_rates_by_date_currency.return_value = [
-        ExchangeRate(provider=Provider(name="currency_layer"), date=_date, currency="EUR", rate=Decimal(0.77))
+        ExchangeRate(provider=Provider(name="currency_layer"), date=_date, currency="EUR", rate=Decimal(0.77)),
     ]
     dao_exchange_rate.insert_new_rate.return_value = [
-        ExchangeRate(provider=Provider(name="grandtrunk"), date=_date, currency="EUR", rate=Decimal(0.75))
+        ExchangeRate(provider=Provider(name="grandtrunk"), date=_date, currency="EUR", rate=Decimal(0.75)),
     ]
 
     exchange_rates = exchange_rate_manager.get_or_update_rate_by_date(_date, currency="EUR", logger=logger)
@@ -143,10 +143,10 @@ def test_get_or_update_rate_by_date__today_before_cron_update(dao_exchange_rate,
 
     grandtrunk.get_by_date.return_value = Decimal(0.75)
     dao_exchange_rate.get_rates_by_date_currency.return_value = [
-        ExchangeRate(provider=Provider(name="currency_layer"), date=today, currency="EUR", rate=Decimal(0.77))
+        ExchangeRate(provider=Provider(name="currency_layer"), date=today, currency="EUR", rate=Decimal(0.77)),
     ]
     dao_exchange_rate.get_rate_by_date_currency_provider.return_value = [
-        ExchangeRate(provider=Provider(name="grandtrunk"), date=yesterday, currency="EUR", rate=Decimal(0.75))
+        ExchangeRate(provider=Provider(name="grandtrunk"), date=yesterday, currency="EUR", rate=Decimal(0.75)),
     ]
 
     exchange_rates = exchange_rate_manager.get_or_update_rate_by_date(today, currency="EUR", logger=logger)
@@ -157,7 +157,7 @@ def test_get_or_update_rate_by_date__today_before_cron_update(dao_exchange_rate,
 
 
 def test_get_or_update_rate_by_date__today_before_cron_update_no_yesterday_rates(
-    dao_exchange_rate, dao_provider, currency_layer, grandtrunk, base_currency, currencies, logger
+    dao_exchange_rate, dao_provider, currency_layer, grandtrunk, base_currency, currencies, logger,
 ):
     """
     Get all rates by date.
@@ -173,11 +173,11 @@ def test_get_or_update_rate_by_date__today_before_cron_update_no_yesterday_rates
 
     grandtrunk.get_by_date.return_value = Decimal(0.75)
     dao_exchange_rate.get_rates_by_date_currency.return_value = [
-        ExchangeRate(provider=Provider(name="currency_layer"), date=today, currency="EUR", rate=Decimal(0.77))
+        ExchangeRate(provider=Provider(name="currency_layer"), date=today, currency="EUR", rate=Decimal(0.77)),
     ]
     dao_exchange_rate.get_rate_by_date_currency_provider.return_value = []
     dao_exchange_rate.insert_new_rate.return_value = [
-        ExchangeRate(provider=Provider(name="grandtrunk"), date=today, currency="EUR", rate=Decimal(0.75))
+        ExchangeRate(provider=Provider(name="grandtrunk"), date=today, currency="EUR", rate=Decimal(0.75)),
     ]
 
     exchange_rates = exchange_rate_manager.get_or_update_rate_by_date(today, currency="EUR", logger=logger)
@@ -191,7 +191,7 @@ def test_get_or_update_rate_by_date__today_before_cron_update_no_yesterday_rates
 
 
 def test_get_or_update_rate_by_date__no_api_requests_for_historical_data_on_limited_providers(
-    dao_exchange_rate, dao_provider, fixer, currency_layer, grandtrunk, base_currency, currencies, logger
+    dao_exchange_rate, dao_provider, fixer, currency_layer, grandtrunk, base_currency, currencies, logger,
 ):
     """
     In case historical data are requested and they are not in database we don't want to request API if the provider has request limit
@@ -220,7 +220,7 @@ def test_get_exchange_rate_by_date(dao_exchange_rate, dao_provider, base_currenc
     def _get_rates_by_date_currency(_, currency):
         return {
             "EUR": [ExchangeRate(id=1, currency="EUR", rate=Decimal(0.89), provider=Provider(name="currency_layer"))],
-            "CZK": [ExchangeRate(id=2, currency="CZK", rate=Decimal(24.20), provider=Provider(name="currency_layer"))]
+            "CZK": [ExchangeRate(id=2, currency="CZK", rate=Decimal(24.20), provider=Provider(name="currency_layer"))],
         }.get(currency)
 
     dao_exchange_rate.get_rates_by_date_currency.side_effect = _get_rates_by_date_currency

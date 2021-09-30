@@ -85,8 +85,8 @@ def http_api_logger(func):
             resp.text = json.dumps(
                 {
                     "error":
-                        "Unexpected error. If the problem persists contact our support with trace ID 'golddigger." + logger.extra["flow_id"] + "' please."
-                }
+                        "Unexpected error. If the problem persists contact our support with trace ID 'golddigger." + logger.extra["flow_id"] + "' please.",
+                },
             )
 
     return wrapper

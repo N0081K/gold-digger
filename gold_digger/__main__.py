@@ -39,7 +39,7 @@ def cron(**_):
                 5 0 * * * cd /app && python -m gold_digger update --exclude-providers fixer.io {redirect}
                 5 2 * * * cd /app && python -m gold_digger update --providers fixer.io {redirect}
                 0 * * * * echo "`date` - cron health check" {redirect}
-            """.format(redirect="> /proc/1/fd/1 2>/proc/1/fd/2")  # redirect to stdout/stderr
+            """.format(redirect="> /proc/1/fd/1 2>/proc/1/fd/2"),  # redirect to stdout/stderr
         )
 
         logger.info("Cron started. Commands:\n{}\n---".format("\n".join(list(map(str, cron_tab.crons)))))

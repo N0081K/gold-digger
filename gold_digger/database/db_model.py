@@ -35,5 +35,5 @@ class ExchangeRate(Base):
         """
         return cls(
             currency=base_currency,
-            rate=Decimal(1.0)
+            rate=Decimal(1.0),
         )

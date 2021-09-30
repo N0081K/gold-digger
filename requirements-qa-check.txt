@@ -1,4 +1,5 @@
 flake8==3.9.2
+flake8-commas==2.0.0
 flake8-eradicate==1.1.0
 flake8-isort==4.0.0
 flake8-print==4.0.0
