@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from http import HTTPStatus
 from operator import attrgetter
 
 from cachetools import cachedmethod, keys
@@ -138,7 +139,7 @@ class Frankfurter(Provider):
         try:
             self._http_session.cookies.clear()
             response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
-            if response.status_code != self.STATUS_CODE_200_OK:
+            if response.status_code != HTTPStatus.OK:
                 logger.error("%s - Status code: %s, URL: %s, Params: %s", self, response.status_code, url, params)
             return response
         except RequestException as e:

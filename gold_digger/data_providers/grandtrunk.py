@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import date, datetime
+from http import HTTPStatus
 from operator import attrgetter
 
 from cachetools import cachedmethod, keys
@@ -38,10 +39,10 @@ class GrandTrunk(Provider):
         response = self._get(f"{self.BASE_URL}/currencies/{date_of_exchange.strftime('%Y-%m-%d')}", logger=logger)
         if not response:
             return currencies
-        if response.status_code == self.STATUS_CODE_503_SERVICE_UNAVAILABLE:
+        if response.status_code == HTTPStatus.SERVICE_UNAVAILABLE:
             self.set_request_limit_reached(logger)
             return currencies
-        if response.status_code != self.STATUS_CODE_200_OK:
+        if response.status_code != HTTPStatus.OK:
             return currencies
 
         currencies = set(response.text.split("\n"))
@@ -66,10 +67,10 @@ class GrandTrunk(Provider):
         response = self._get(f"{self.BASE_URL}/getrate/{date_str}/{self.base_currency}/{currency}", logger=logger)
         if not response:
             return None
-        if response.status_code == self.STATUS_CODE_503_SERVICE_UNAVAILABLE:
+        if response.status_code == HTTPStatus.SERVICE_UNAVAILABLE:
             self.set_request_limit_reached(logger)
             return None
-        if response.status_code != self.STATUS_CODE_200_OK:
+        if response.status_code != HTTPStatus.OK:
             return None
 
         return self._to_decimal(response.text.strip(), currency, logger=logger)
@@ -93,10 +94,10 @@ class GrandTrunk(Provider):
             response = self._get(f"{self.BASE_URL}/getrate/{date_of_exchange}/{self.base_currency}/{currency}", logger=logger)
             if not response:
                 continue
-            if response.status_code == self.STATUS_CODE_503_SERVICE_UNAVAILABLE:
+            if response.status_code == HTTPStatus.SERVICE_UNAVAILABLE:
                 self.set_request_limit_reached(logger)
                 return {}
-            if response.status_code != self.STATUS_CODE_200_OK:
+            if response.status_code != HTTPStatus.OK:
                 continue
 
             decimal_value = self._to_decimal(response.text.strip(), currency, logger=logger)
@@ -119,10 +120,10 @@ class GrandTrunk(Provider):
             response = self._get(f"{self.BASE_URL}/getrange/{origin_date_string}/{date.today()}/{self.base_currency}/{currency}", logger=logger)
             if not response:
                 continue
-            if response.status_code == self.STATUS_CODE_503_SERVICE_UNAVAILABLE:
+            if response.status_code == HTTPStatus.SERVICE_UNAVAILABLE:
                 self.set_request_limit_reached(logger)
                 return {}
-            if response.status_code != self.STATUS_CODE_200_OK:
+            if response.status_code != HTTPStatus.OK:
                 continue
 
             records = response.text.strip().split("\n") if response else []
@@ -151,7 +152,7 @@ class GrandTrunk(Provider):
         try:
             self._http_session.cookies.clear()
             response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
-            if response.status_code != self.STATUS_CODE_200_OK:
+            if response.status_code != HTTPStatus.OK:
                 logger.error("%s - Status code: %s, URL: %s, Params: %s", self, response.status_code, url, params)
             return response
         except RequestException as e:

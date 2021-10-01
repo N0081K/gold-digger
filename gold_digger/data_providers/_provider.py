@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from functools import wraps
+from http import HTTPStatus
 from inspect import getcallargs
 
 from cachetools import Cache
@@ -10,9 +11,6 @@ from requests import RequestException, Session
 
 class Provider(metaclass=ABCMeta):
     DEFAULT_REQUEST_TIMEOUT = 15  # 15 seconds for both connect & read timeouts
-
-    STATUS_CODE_200_OK = 200
-    STATUS_CODE_503_SERVICE_UNAVAILABLE = 503
 
     def __init__(self, base_currency, http_user_agent):
         """
@@ -90,7 +88,7 @@ class Provider(metaclass=ABCMeta):
         try:
             self._http_session.cookies.clear()
             response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
-            if response.status_code == 200:
+            if response.status_code == HTTPStatus.OK:
                 return response
             else:
                 logger.error("%s - Status code: %s, URL: %s, Params: %s", self, response.status_code, url, params)
