@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from http import HTTPStatus
 from operator import attrgetter
 
 from cachetools import cachedmethod, keys
@@ -131,15 +132,17 @@ class Frankfurter(Provider):
     def _get(self, url, params=None, *, logger):
         """
         :type url: str
-        :type params: dict[str, str]
+        :type params: None | dict[str, str]
         :type logger: gold_digger.utils.ContextLogger
         :rtype: requests.Response | None
         """
         try:
             self._http_session.cookies.clear()
             response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
-            if response.status_code != 200:
+            if response.status_code != HTTPStatus.OK:
                 logger.error("%s - Status code: %s, URL: %s, Params: %s", self, response.status_code, url, params)
             return response
         except RequestException as e:
             logger.error("%s - Exception: %s, URL: %s, Params: %s", self, e, url, params)
+
+        return None

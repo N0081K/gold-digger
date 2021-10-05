@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from functools import wraps
+from http import HTTPStatus
 from inspect import getcallargs
 
 from cachetools import Cache
@@ -80,19 +81,21 @@ class Provider(metaclass=ABCMeta):
     def _get(self, url, params=None, *, logger):
         """
         :type url: str
-        :type params: dict[str, str]
+        :type params: None | dict[str, str]
         :type logger: gold_digger.utils.ContextLogger
         :rtype: requests.Response | None
         """
         try:
             self._http_session.cookies.clear()
             response = self._http_session.get(url, params=params, timeout=self.DEFAULT_REQUEST_TIMEOUT)
-            if response.status_code == 200:
+            if response.status_code == HTTPStatus.OK:
                 return response
             else:
                 logger.error("%s - Status code: %s, URL: %s, Params: %s", self, response.status_code, url, params)
         except RequestException as e:
             logger.error("%s - Exception: %s, URL: %s, Params: %s", self, e, url, params)
+
+        return None
 
     def _to_decimal(self, value, currency=None, *, logger):
         """
