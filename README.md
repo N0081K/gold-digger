@@ -126,7 +126,7 @@ docker run --detach --restart=always \
 
 ## Settings profiles
 
-Currently you can use two settings profiles:
+Currently, you can use two settings profiles:
 
 * default profile named `local` with definitions in `gold_digger/settings/_settings_local.py`
 * production profile named `master` with definitions in `gold_digger/settings/_settings_master.py`

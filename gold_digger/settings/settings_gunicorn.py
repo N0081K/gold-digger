@@ -15,7 +15,7 @@ timeout = 300  # 5 minutes in seconds
 bind = "0.0.0.0:8080"
 workers = 1
 
-# Overwrite some Gunicorns params by ENV variables
+# Overwrite some Gunicorn's params by ENV variables
 for k, v in os.environ.items():
     if k.startswith("GUNICORN_"):
         key = k.split("_", 1)[1].lower()
