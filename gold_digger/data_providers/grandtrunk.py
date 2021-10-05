@@ -37,7 +37,7 @@ class GrandTrunk(Provider):
         """
         currencies = set()
         response = self._get(f"{self.BASE_URL}/currencies/{date_of_exchange.strftime('%Y-%m-%d')}", logger=logger)
-        if not response:
+        if response is None:
             return currencies
         if response.status_code == HTTPStatus.SERVICE_UNAVAILABLE:
             self.set_request_limit_reached(logger)
@@ -65,7 +65,7 @@ class GrandTrunk(Provider):
         logger.debug("%s - Requesting for %s (%s)", self, currency, date_str, extra={"currency": currency, "date": date_str})
 
         response = self._get(f"{self.BASE_URL}/getrate/{date_str}/{self.base_currency}/{currency}", logger=logger)
-        if not response:
+        if response is None:
             return None
         if response.status_code == HTTPStatus.SERVICE_UNAVAILABLE:
             self.set_request_limit_reached(logger)
@@ -92,7 +92,7 @@ class GrandTrunk(Provider):
                 continue
 
             response = self._get(f"{self.BASE_URL}/getrate/{date_of_exchange}/{self.base_currency}/{currency}", logger=logger)
-            if not response:
+            if response is None:
                 continue
             if response.status_code == HTTPStatus.SERVICE_UNAVAILABLE:
                 self.set_request_limit_reached(logger)
@@ -118,7 +118,7 @@ class GrandTrunk(Provider):
         origin_date_string = origin_date.strftime("%Y-%m-%d")
         for currency in currencies:
             response = self._get(f"{self.BASE_URL}/getrange/{origin_date_string}/{date.today()}/{self.base_currency}/{currency}", logger=logger)
-            if not response:
+            if response is None:
                 continue
             if response.status_code == HTTPStatus.SERVICE_UNAVAILABLE:
                 self.set_request_limit_reached(logger)
