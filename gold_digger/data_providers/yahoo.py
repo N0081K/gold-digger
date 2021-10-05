@@ -117,21 +117,23 @@ class Yahoo(Provider):
         :type logger: gold_digger.utils.ContextLogger
         :rtype: dict[str, decimal.Decimal | None]
         """
+        if not response:
+            return {}
+
         rates = {}
-        if response:
-            data = response.json()
-            for i in data["spark"]["result"]:
-                currency = ""
-                try:
-                    currency = i["response"][0]["meta"]["currency"]
-                    rate = i["response"][0]["indicators"]["quote"][0]["close"][0]
-                    rate = self._to_decimal(str(rate), currency, logger=logger)
+        data = response.json()
+        for i in data["spark"]["result"]:
+            currency = ""
+            try:
+                currency = i["response"][0]["meta"]["currency"]
+                rate = i["response"][0]["indicators"]["quote"][0]["close"][0]
+                rate = self._to_decimal(str(rate), currency, logger=logger)
 
-                    if currency in self._supported_currencies:
-                        rates[currency] = rate
+                if currency in self._supported_currencies:
+                    rates[currency] = rate
 
-                except (KeyError, IndexError):
-                    logger.warning("%s - Cannot get rate for %s.", self, currency)
+            except (KeyError, IndexError):
+                logger.warning("%s - Cannot get rate for %s.", self, currency)
 
         return rates
 

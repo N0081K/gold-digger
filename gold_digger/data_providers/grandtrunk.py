@@ -125,8 +125,7 @@ class GrandTrunk(Provider):
             if response.status_code != HTTPStatus.OK:
                 continue
 
-            records = response.text.strip().split("\n") if response else []
-            for record in records:
+            for record in response.text.strip().split("\n"):
                 record = record.rstrip()
                 if record:
                     try:

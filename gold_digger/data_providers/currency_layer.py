@@ -63,7 +63,7 @@ class CurrencyLayer(Provider):
 
         response = self._get(f"{self._url}&date={date_str}&currencies={currency}", logger=logger)
         if not response:
-            logger.warning("%s - Error. Status: %s", self, response.status_code, extra={"currency": currency, "date": date_str})
+            logger.warning("%s - Unexpected response. Response: %s", self, response, extra={"currency": currency, "date": date_str})
             return None
 
         response = response.json()
