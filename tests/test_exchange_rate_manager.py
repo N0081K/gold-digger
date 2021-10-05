@@ -18,7 +18,7 @@ def dao_exchange_rate():
 
 @pytest.fixture
 def dao_provider():
-    m = Mock(DaoProvider)
+    mock = Mock(DaoProvider)
 
     def _get_or_create_provider_by_name(name):
         return {
@@ -26,37 +26,37 @@ def dao_provider():
             "grandtrunk": Provider(id=2, name="grandtrunk"),
         }.get(name)
 
-    m.get_or_create_provider_by_name.side_effect = _get_or_create_provider_by_name
-    return m
+    mock.get_or_create_provider_by_name.side_effect = _get_or_create_provider_by_name
+    return mock
 
 
 @pytest.fixture
 def currency_layer(currencies):
-    provider = Mock(CurrencyLayer)
-    provider.name = "currency_layer"
-    provider.get_all_by_date.return_value = {"EUR": Decimal(0.77), "USD": Decimal(1)}
-    provider.get_supported_currencies.return_value = currencies
-    provider.has_request_limit = True
-    return provider
+    mock = Mock(CurrencyLayer)
+    mock.name = "currency_layer"
+    mock.get_all_by_date.return_value = {"EUR": Decimal(0.77), "USD": Decimal(1)}
+    mock.get_supported_currencies.return_value = currencies
+    mock.has_request_limit = True
+    return mock
 
 
 @pytest.fixture
 def fixer(currencies):
-    provider = Mock(Fixer)
-    provider.name = "fixer.io"
-    provider.get_supported_currencies.return_value = currencies
-    provider.has_request_limit = True
-    return provider
+    mock = Mock(Fixer)
+    mock.name = "fixer.io"
+    mock.get_supported_currencies.return_value = currencies
+    mock.has_request_limit = True
+    return mock
 
 
 @pytest.fixture
 def grandtrunk(currencies):
-    provider = Mock(GrandTrunk)
-    provider.name = "grandtrunk"
-    provider.get_all_by_date.return_value = {"EUR": Decimal(0.75), "USD": Decimal(1)}
-    provider.get_supported_currencies.return_value = currencies
-    provider.has_request_limit = False
-    return provider
+    mock = Mock(GrandTrunk)
+    mock.name = "grandtrunk"
+    mock.get_all_by_date.return_value = {"EUR": Decimal(0.75), "USD": Decimal(1)}
+    mock.get_supported_currencies.return_value = currencies
+    mock.has_request_limit = False
+    return mock
 
 
 def test_update_all_rates_by_date(dao_exchange_rate, dao_provider, currency_layer, base_currency, currencies, logger):
