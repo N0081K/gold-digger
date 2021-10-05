@@ -48,7 +48,7 @@ For running the tests simply use:
  These tests are executed against real test database.
 
 ### Tests & QA
-- `pytest` runs unit tests (use `--runslow` for database tests)
+- `pytest` runs unit tests (use `--database-tests` for database tests)
 - `isort .` sorts imports
 - `black .` formats code
 - `flake8` checks code quality
