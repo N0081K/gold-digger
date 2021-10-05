@@ -81,7 +81,7 @@ class Provider(metaclass=ABCMeta):
     def _get(self, url, params=None, *, logger):
         """
         :type url: str
-        :type params: dict[str, str]
+        :type params: None | dict[str, str]
         :type logger: gold_digger.utils.ContextLogger
         :rtype: requests.Response | None
         """
