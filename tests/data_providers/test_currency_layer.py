@@ -14,7 +14,7 @@ def response():
     return Response()
 
 
-def test_currency_layer__reach_monthly_limit(currency_layer, response, logger):
+def test_get_by_date__reach_monthly_limit(currency_layer, response, logger):
     """
     Currency layer free API has monthly requests limit. After the limit is reached, no calls to API should be made until the beginning of the next month.
     Case: Firstly block upcoming requests by sending 104 error, then set today for the first day of a month and unblock requests.

@@ -14,7 +14,7 @@ def response():
     return Response()
 
 
-def test_fixer_conversion_to_base_currency(fixer, logger):
+def test_conversion_to_base_currency(fixer, logger):
     """
     Fixer has EUR as a base currency. It has to be converted firstly to USD.
 
@@ -35,10 +35,11 @@ def test_fixer_conversion_to_base_currency(fixer, logger):
     :type logger: gold_digger.utils.ContextLogger
     """
     converted_rate = fixer._conversion_to_base_currency(Decimal(1.125138), Decimal(319.899055), logger)
+
     assert converted_rate == Decimal("284.3198389886396014034013616")
 
 
-def test_fixer_reach_monthly_limit(fixer, response, logger):
+def test_get_by_date__reach_monthly_limit(fixer, response, logger):
     """
     Fixer free API has monthly requests limit. After the limit is reached, no calls to API should be made until the beginning of the next month.
     Case: Firstly block upcoming requests by sending 104 error, then set today for the first day of a month and unblock requests.

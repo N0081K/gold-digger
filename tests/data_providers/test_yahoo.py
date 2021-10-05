@@ -156,7 +156,7 @@ YAHOO_RESPONSE = b"""
 """
 
 
-def test_yahoo_get_by_date(yahoo, logger):
+def test_get_by_date(yahoo, logger):
     """
     :type yahoo: gold_digger.data_providers.Yahoo
     :type logger: gold_digger.utils.ContextLogger
@@ -170,7 +170,7 @@ def test_yahoo_get_by_date(yahoo, logger):
     assert yahoo.get_by_date(date.today(), "CZK", logger) == Decimal("25.959")
 
 
-def test_yahoo_get_by_date__unsupported_currency(yahoo, logger):
+def test_get_by_date__unsupported_currency(yahoo, logger):
     """
     :type yahoo: gold_digger.data_providers.Yahoo
     :type logger: gold_digger.utils.ContextLogger
@@ -184,7 +184,7 @@ def test_yahoo_get_by_date__unsupported_currency(yahoo, logger):
     assert yahoo.get_by_date(date.today(), "XXX", logger) is None  # unsupported currency
 
 
-def test_yahoo_get_all_by_date(yahoo, logger):
+def test_get_all_by_date(yahoo, logger):
     """
     :type yahoo: gold_digger.data_providers.Yahoo
     :type logger: gold_digger.utils.ContextLogger

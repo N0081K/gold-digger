@@ -135,6 +135,7 @@ def test_get_or_update_rate_by_date(dao_exchange_rate_mock, dao_provider_mock, c
     ]
 
     exchange_rates = exchange_rate_manager.get_or_update_rate_by_date(_date, currency="EUR", logger=logger)
+
     insert_new_rate_args, _ = dao_exchange_rate_mock.insert_new_rate.call_args
 
     assert dao_exchange_rate_mock.insert_new_rate.call_count == 1
@@ -263,6 +264,7 @@ def test_get_or_update_rate_by_date__today_before_cron_update_no_yesterday_rates
     ]
 
     exchange_rates = exchange_rate_manager.get_or_update_rate_by_date(today, currency="EUR", logger=logger)
+
     insert_new_rate_args, _ = dao_exchange_rate_mock.insert_new_rate.call_args
 
     assert dao_exchange_rate_mock.insert_new_rate.call_count == 1
@@ -338,6 +340,7 @@ def test_get_exchange_rate_by_date(dao_exchange_rate_mock, dao_provider_mock, ba
         }.get(currency)
 
     dao_exchange_rate_mock.get_rates_by_date_currency.side_effect = _get_rates_by_date_currency
+
     exchange_rate = exchange_rate_manager.get_exchange_rate_by_date(_date, "EUR", "CZK", logger)
 
     assert exchange_rate == Decimal(24.20) / Decimal(0.89)
@@ -370,6 +373,7 @@ def test_get_average_exchange_rate_by_dates(dao_exchange_rate_mock, dao_provider
     dao_exchange_rate_mock.get_sum_of_rates_in_period.side_effect = _get_sum_of_rates_in_period
 
     exchange_rate = exchange_rate_manager.get_average_exchange_rate_by_dates(_start_date, _end_date, "EUR", "CZK", logger_mock)
+
     eur_average = Decimal(8.9) / 11
     czk_average = Decimal(217.8) / 9
 
@@ -377,7 +381,7 @@ def test_get_average_exchange_rate_by_dates(dao_exchange_rate_mock, dao_provider
     assert logger_mock.warning.call_count == 1
 
 
-def test_pick_rate_from_any_provider_if_rates_are_same():
+def test_pick_the_best__pick_rate_from_any_provider_if_rates_are_same():
     """
     Picked exchange rate is the same as the equal candidates.
     """
@@ -386,7 +390,7 @@ def test_pick_rate_from_any_provider_if_rates_are_same():
     assert best == 0.5
 
 
-def test_pick_middle_rate_if_it_exists():
+def test_pick_the_best__pick_middle_rate_if_it_exists():
     """
     Picked exchange rate is the middle of the unique candidates.
     """
@@ -395,7 +399,7 @@ def test_pick_middle_rate_if_it_exists():
     assert best == 0.5
 
 
-def test_pick_middle_rate_if_it_exists2():
+def test_pick_the_best__pick_middle_rate_if_it_exists2():
     """
     Picked exchange rate is the middle of the unique candidates.
     """
@@ -404,7 +408,7 @@ def test_pick_middle_rate_if_it_exists2():
     assert best == 1.0
 
 
-def test_pick_rate_from_pair_of_same_rates_by_order_of_providers():
+def test_pick_the_best__pick_rate_from_pair_of_same_rates_by_order_of_providers():
     """
     Picked exchange rate is the most common of the candidates.
     """
@@ -413,7 +417,7 @@ def test_pick_rate_from_pair_of_same_rates_by_order_of_providers():
     assert best == 0.7
 
 
-def test_pick_rate_from_most_similar_pair_of_rates_by_order_of_providers():
+def test_pick_the_best__pick_rate_from_most_similar_pair_of_rates_by_order_of_providers():
     """
     Picked exchange rate is the one most similar to the other candidates.
     """
