@@ -1,6 +1,9 @@
 import logging
+import uuid
 
 import pytest
+
+from gold_digger.utils import ContextLogger
 
 rerun_started = False
 
@@ -43,12 +46,22 @@ def db_connection_string(request):
     return cmd if cmd else "postgresql://postgres:postgres@localhost/gold-digger-test"
 
 
+@pytest.fixture(scope="session")
+def unique_id():
+    """
+    :rtype: str
+    """
+    return str(uuid.uuid4())
+
+
 @pytest.fixture
-def logger():
+def logger(unique_id):
     """
-    :rtype: logging.Logger
+    :type unique_id: str
+    :rtype: gold_digger.utils.ContextLogger
     """
-    return logging.getLogger("gold-digger.tests")
+    logger_ = logging.getLogger("gold-digger.tests")
+    return ContextLogger(logger_, {"flow_id": unique_id})
 
 
 @pytest.fixture

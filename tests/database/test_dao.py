@@ -48,7 +48,7 @@ def test_insert_exchange_rate_to_db(dao_exchange_rate, dao_provider, logger):
     """
     :type dao_exchange_rate: gold_digger.database.DaoExchangeRate
     :type dao_provider: gold_digger.database.DaoProvider
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     assert dao_exchange_rate.get_rates_by_date_currency(date.today(), "USD") == []
 

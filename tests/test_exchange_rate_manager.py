@@ -90,7 +90,7 @@ def test_update_all_rates_by_date(dao_exchange_rate, dao_provider, currency_laye
     :param currency_layer: Mock of gold_digger.data_providers.CurrencyLayer
     :type base_currency: str
     :type currencies: set[str]
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     _date = date(2016, 2, 17)
 
@@ -120,7 +120,7 @@ def test_get_or_update_rate_by_date(dao_exchange_rate, dao_provider, currency_la
     :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
     :type base_currency: str
     :type currencies: set[str]
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     _date = date(2016, 2, 17)
 
@@ -154,7 +154,7 @@ def test_get_or_update_rate_by_date__today_after_cron_update(dao_exchange_rate, 
     :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
     :type base_currency: str
     :type currencies: set[str]
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     today = date.today()
 
@@ -186,7 +186,7 @@ def test_get_or_update_rate_by_date__today_before_cron_update(dao_exchange_rate,
     :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
     :type base_currency: str
     :type currencies: set[str]
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     today = date.today()
     yesterday = today - timedelta(1)
@@ -230,7 +230,7 @@ def test_get_or_update_rate_by_date__today_before_cron_update_no_yesterday_rates
     :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
     :type base_currency: str
     :type currencies: set[str]
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     today = date.today()
     yesterday = today - timedelta(1)
@@ -276,7 +276,7 @@ def test_get_or_update_rate_by_date__no_api_requests_for_historical_data_on_limi
     :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
     :type base_currency: str
     :type currencies: set[str]
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     yesterday = date.today() - timedelta(1)  # yesterday's rates are treated as historical rates
 
@@ -299,7 +299,7 @@ def test_get_exchange_rate_by_date(dao_exchange_rate, dao_provider, base_currenc
     :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
     :param dao_provider: Mock of gold_digger.database.DaoProvider
     :type base_currency: str
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     _date = date(2016, 2, 17)
 
@@ -331,7 +331,7 @@ def test_get_average_exchange_rate_by_dates(dao_exchange_rate, dao_provider, bas
     :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
     :param dao_provider: Mock of gold_digger.database.DaoProvider
     :type base_currency: str
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     _start_date = date(2016, 2, 7)
     _end_date = date(2016, 2, 17)
@@ -406,7 +406,7 @@ def test_get_exchange_rate_in_intervals_by_date(dao_exchange_rate, dao_provider,
     :param dao_provider: Mock of gold_digger.database.DaoProvider
     :type base_currency: str
     :type currencies: set[str]
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     date_of_exchange_ = date(2020, 11, 30)
     start_date_6_days_ago = date_of_exchange_ - timedelta(days=6)

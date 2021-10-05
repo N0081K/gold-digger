@@ -32,7 +32,7 @@ def test_fixer_conversion_to_base_currency(fixer, logger):
     }
 
     :type fixer: gold_digger.data_providers.Fixer
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     converted_rate = fixer._conversion_to_base_currency(Decimal(1.125138), Decimal(319.899055), logger)
     assert converted_rate == Decimal("284.3198389886396014034013616")
@@ -45,7 +45,7 @@ def test_fixer_reach_monthly_limit(fixer, response, logger):
 
     :type fixer: gold_digger.data_providers.Fixer
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 200
     response._content = b"""

@@ -19,7 +19,7 @@ def fixer(base_currency, http_user_agent, logger):
     """
     :type base_currency: str
     :type http_user_agent: str
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     :rtype: gold_digger.data_providers.Fixer
     """
     return Fixer(base_currency, http_user_agent, "simple_access_key", logger)
@@ -40,7 +40,7 @@ def currency_layer(base_currency, http_user_agent, logger):
     """
     :type base_currency: str
     :type http_user_agent: str
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     :rtype: gold_digger.data_providers.CurrencyLayer
     """
     return CurrencyLayer(base_currency, http_user_agent, "simple_access_key", logger)

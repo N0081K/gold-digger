@@ -21,7 +21,7 @@ def test_currency_layer__reach_monthly_limit(currency_layer, response, logger):
 
     :type currency_layer: gold_digger.data_providers.CurrencyLayer
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 200
     response._content = b"""

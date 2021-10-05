@@ -58,7 +58,7 @@ def test_get_by_date__available(frankfurter, response, logger):
     """
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 200
     response._content = API_RESPONSE_USD
@@ -75,7 +75,7 @@ def test_get_by_date__date_unavailable(frankfurter, response, logger):
 
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 200
     response._content = API_RESPONSE_USD
@@ -92,7 +92,7 @@ def test_get_by_date__date_too_old(frankfurter, response, logger):
 
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 400
     response._content = b'{"error": "Error message"}'
@@ -107,7 +107,7 @@ def test_get_by_date__currency_unavailable(frankfurter, response, logger):
     """
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 400
     response._content = b'{"error": "Error message"}'
@@ -124,7 +124,7 @@ def test_get_by_date__base_currency_is_same_as_target_currency(frankfurter, base
 
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type base_currency: str
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 200
     response._content = API_RESPONSE_USD
@@ -140,7 +140,7 @@ def test_get_all_by_date__available(frankfurter, response, logger):
     """
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 200
     response._content = API_RESPONSE_USD
@@ -160,7 +160,7 @@ def test_get_all_by_date__date_unavailable(frankfurter, response, logger):
 
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 200
     response._content = API_RESPONSE_USD
@@ -180,7 +180,7 @@ def test_get_all_by_date__date_too_old(frankfurter, response, logger):
 
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 400
     response._content = b'{"error": "Error message"}'
@@ -195,7 +195,7 @@ def test_get_all_by_date__currency_unavailable(frankfurter, response, logger):
     """
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 400
     response._content = b'{"error": "Error message"}'
@@ -213,7 +213,7 @@ def test_get_all_by_date__base_currency_is_same_as_target_currency(frankfurter, 
     :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type base_currency: str
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     response.status_code = 200
     response._content = API_RESPONSE_USD

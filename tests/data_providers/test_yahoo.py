@@ -159,7 +159,7 @@ YAHOO_RESPONSE = b"""
 def test_yahoo_get_by_date(yahoo, logger):
     """
     :type yahoo: gold_digger.data_providers.Yahoo
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     sample = Response()
     sample.status_code = 200
@@ -173,7 +173,7 @@ def test_yahoo_get_by_date(yahoo, logger):
 def test_yahoo_get_by_date__unsupported_currency(yahoo, logger):
     """
     :type yahoo: gold_digger.data_providers.Yahoo
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     sample = Response()
     sample.status_code = 404
@@ -187,7 +187,7 @@ def test_yahoo_get_by_date__unsupported_currency(yahoo, logger):
 def test_yahoo_get_all_by_date(yahoo, logger):
     """
     :type yahoo: gold_digger.data_providers.Yahoo
-    :type logger: logging.Logger
+    :type logger: gold_digger.utils.ContextLogger
     """
     sample = Response()
     sample.status_code = 200
