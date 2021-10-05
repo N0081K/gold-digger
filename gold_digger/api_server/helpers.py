@@ -22,9 +22,9 @@ def http_api_logger(func):
     """
 
     @wraps(func)
-    def wrapper(object, req, resp, *args, **kwargs):
+    def wrapper(api_route, req, resp, *args, **kwargs):
         """
-        :type object: object
+        :type api_route: object
         :type req: falcon.request.Request
         :type resp: falcon.response.Response
         """
@@ -44,7 +44,7 @@ def http_api_logger(func):
         )
 
         try:
-            func(object, req, resp, *args, logger=logger, **kwargs)
+            func(api_route, req, resp, *args, logger=logger, **kwargs)
             logger.info(
                 "Completed API request %s.",
                 func.__name__,
