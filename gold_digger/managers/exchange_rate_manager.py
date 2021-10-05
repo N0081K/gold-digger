@@ -201,7 +201,6 @@ class ExchangeRateManager:
         _to_currency = self._get_sum_of_rates_in_period(start_date, end_date, to_currency)
 
         for (from_provider, from_count, from_sum), (to_provider, to_count, to_sum) in zip(_from_currency, _to_currency):
-
             logger.info(
                 "Sum of currencies %s (%s records) = %s, %s (%s records) = %s in period %s - %s by (%s, %s)",
                 from_currency,
