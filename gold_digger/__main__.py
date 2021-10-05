@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime as datetime_
 
 import click
 from crontab import CronTab
@@ -13,7 +13,7 @@ def _parse_date(ctx, param, value):
     if isinstance(value, date):
         return value
     try:
-        return datetime.strptime(value, "%Y-%m-%d").date()
+        return datetime_.strptime(value, "%Y-%m-%d").date()
     except ValueError:
         raise click.BadParameter("Date should be in format yyyy-mm-dd")
 
