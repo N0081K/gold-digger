@@ -35,15 +35,14 @@ class GrandTrunk(Provider):
         :type logger: gold_digger.utils.ContextLogger
         :rtype: set[str]
         """
-        currencies = set()
         response = self._get(f"{self.BASE_URL}/currencies/{date_of_exchange.strftime('%Y-%m-%d')}", logger=logger)
         if response is None:
-            return currencies
+            return set()
         if response.status_code == HTTPStatus.SERVICE_UNAVAILABLE:
             self.set_request_limit_reached(logger)
-            return currencies
+            return set()
         if response.status_code != HTTPStatus.OK:
-            return currencies
+            return set()
 
         currencies = set(response.text.split("\n"))
         if currencies:
