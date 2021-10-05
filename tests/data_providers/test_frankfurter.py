@@ -54,175 +54,179 @@ def response():
     return Response()
 
 
-def test_get_by_date__available(frankfurter, response, logger):
-    """
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type response: requests.Response
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 200
-    response._content = API_RESPONSE_USD
+class TestGetByDate:
+    @staticmethod
+    def test_get_by_date__available(frankfurter, response, logger):
+        """
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type response: requests.Response
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 200
+        response._content = API_RESPONSE_USD
 
-    frankfurter._get = lambda url, **kw: response
+        frankfurter._get = lambda url, **kw: response
 
-    converted_rate = frankfurter.get_by_date(date(2019, 4, 15), "CZK", logger)
-    assert converted_rate == Decimal(22.6509325555)
+        converted_rate = frankfurter.get_by_date(date(2019, 4, 15), "CZK", logger)
+        assert converted_rate == Decimal(22.6509325555)
 
+    @staticmethod
+    def test_get_by_date__date_unavailable(frankfurter, response, logger):
+        """
+        Frankfurter API returns rates from last available date when asked for an unavailable one.
 
-def test_get_by_date__date_unavailable(frankfurter, response, logger):
-    """
-    Frankfurter API returns rates from last available date when asked for an unavailable one.
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type response: requests.Response
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 200
+        response._content = API_RESPONSE_USD
 
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type response: requests.Response
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 200
-    response._content = API_RESPONSE_USD
+        frankfurter._get = lambda url, **kw: response
 
-    frankfurter._get = lambda url, **kw: response
+        converted_rate = frankfurter.get_by_date(date(2019, 4, 16), "CZK", logger)
+        assert converted_rate == Decimal(22.6509325555)
 
-    converted_rate = frankfurter.get_by_date(date(2019, 4, 16), "CZK", logger)
-    assert converted_rate == Decimal(22.6509325555)
+    @staticmethod
+    def test_get_by_date__date_too_old(frankfurter, response, logger):
+        """
+        Frankfurter API returns error when the specified date is before 1999-01-04.
 
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type response: requests.Response
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 400
+        response._content = b'{"error": "Error message"}'
 
-def test_get_by_date__date_too_old(frankfurter, response, logger):
-    """
-    Frankfurter API returns error when the specified date is before 1999-01-04.
+        frankfurter._get = lambda url, **kw: response
 
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type response: requests.Response
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 400
-    response._content = b'{"error": "Error message"}'
+        converted_rates = frankfurter.get_by_date(date(1000, 1, 11), "CZK", logger)
+        assert converted_rates is None
 
-    frankfurter._get = lambda url, **kw: response
+    @staticmethod
+    def test_get_by_date__currency_unavailable(frankfurter, response, logger):
+        """
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type response: requests.Response
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 400
+        response._content = b'{"error": "Error message"}'
 
-    converted_rates = frankfurter.get_by_date(date(1000, 1, 11), "CZK", logger)
-    assert converted_rates is None
+        frankfurter._get = lambda url, **kw: response
 
+        converted_rates = frankfurter.get_by_date(date(2019, 4, 16), "XXX", logger)
+        assert converted_rates is None
 
-def test_get_by_date__currency_unavailable(frankfurter, response, logger):
-    """
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type response: requests.Response
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 400
-    response._content = b'{"error": "Error message"}'
+    @staticmethod
+    def test_get_by_date__base_currency_is_same_as_target_currency(frankfurter, base_currency, logger):
+        """
+        Frankfurter API returns error when base and target currencies are same.
 
-    frankfurter._get = lambda url, **kw: response
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type base_currency: str
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 200
+        response._content = API_RESPONSE_USD
 
-    converted_rates = frankfurter.get_by_date(date(2019, 4, 16), "XXX", logger)
-    assert converted_rates is None
+        frankfurter._get = lambda url, **kw: response
 
+        converted_rates = frankfurter.get_by_date(date(2019, 4, 16), base_currency, logger)
 
-def test_get_by_date__base_currency_is_same_as_target_currency(frankfurter, base_currency, logger):
-    """
-    Frankfurter API returns error when base and target currencies are same.
-
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type base_currency: str
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 200
-    response._content = API_RESPONSE_USD
-
-    frankfurter._get = lambda url, **kw: response
-
-    converted_rates = frankfurter.get_by_date(date(2019, 4, 16), base_currency, logger)
-
-    assert converted_rates == Decimal("1")
-
-
-def test_get_all_by_date__available(frankfurter, response, logger):
-    """
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type response: requests.Response
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 200
-    response._content = API_RESPONSE_USD
-
-    frankfurter._get = lambda url, **kw: response
-
-    converted_rates = frankfurter.get_all_by_date(date(2019, 4, 15), {"CZK", "EUR"}, logger)
-    assert converted_rates == {
-        "CZK": Decimal(22.6509325555),
-        "EUR": Decimal(0.8839388314),
-    }
+        assert converted_rates == Decimal("1")
 
 
-def test_get_all_by_date__date_unavailable(frankfurter, response, logger):
-    """
-    Frankfurter API returns rates from last available date when asked for an unavailable one.
+class TestGetAllByDate:
+    @staticmethod
+    def test_get_all_by_date__available(frankfurter, response, logger):
+        """
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type response: requests.Response
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 200
+        response._content = API_RESPONSE_USD
 
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type response: requests.Response
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 200
-    response._content = API_RESPONSE_USD
+        frankfurter._get = lambda url, **kw: response
 
-    frankfurter._get = lambda url, **kw: response
+        converted_rates = frankfurter.get_all_by_date(date(2019, 4, 15), {"CZK", "EUR"}, logger)
+        assert converted_rates == {
+            "CZK": Decimal(22.6509325555),
+            "EUR": Decimal(0.8839388314),
+        }
 
-    converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {"CZK", "EUR"}, logger)
-    assert converted_rates == {
-        "CZK": Decimal(22.6509325555),
-        "EUR": Decimal(0.8839388314),
-    }
+    @staticmethod
+    def test_get_all_by_date__date_unavailable(frankfurter, response, logger):
+        """
+        Frankfurter API returns rates from last available date when asked for an unavailable one.
 
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type response: requests.Response
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 200
+        response._content = API_RESPONSE_USD
 
-def test_get_all_by_date__date_too_old(frankfurter, response, logger):
-    """
-    Frankfurter API returns error when the specified date is before 1999-01-04.
+        frankfurter._get = lambda url, **kw: response
 
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type response: requests.Response
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 400
-    response._content = b'{"error": "Error message"}'
+        converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {"CZK", "EUR"}, logger)
+        assert converted_rates == {
+            "CZK": Decimal(22.6509325555),
+            "EUR": Decimal(0.8839388314),
+        }
 
-    frankfurter._get = lambda url, **kw: response
+    @staticmethod
+    def test_get_all_by_date__date_too_old(frankfurter, response, logger):
+        """
+        Frankfurter API returns error when the specified date is before 1999-01-04.
 
-    converted_rates = frankfurter.get_all_by_date(date(1000, 1, 11), {"CZK"}, logger)
-    assert converted_rates == {}
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type response: requests.Response
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 400
+        response._content = b'{"error": "Error message"}'
 
+        frankfurter._get = lambda url, **kw: response
 
-def test_get_all_by_date__currency_unavailable(frankfurter, response, logger):
-    """
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type response: requests.Response
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 400
-    response._content = b'{"error": "Error message"}'
+        converted_rates = frankfurter.get_all_by_date(date(1000, 1, 11), {"CZK"}, logger)
+        assert converted_rates == {}
 
-    frankfurter._get = lambda url, **kw: response
+    @staticmethod
+    def test_get_all_by_date__currency_unavailable(frankfurter, response, logger):
+        """
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type response: requests.Response
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 400
+        response._content = b'{"error": "Error message"}'
 
-    converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {"XXX"}, logger)
-    assert converted_rates == {}
+        frankfurter._get = lambda url, **kw: response
 
+        converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {"XXX"}, logger)
+        assert converted_rates == {}
 
-def test_get_all_by_date__base_currency_is_same_as_target_currency(frankfurter, response, base_currency, logger):
-    """
-    Frankfurter API returns error when base and target currencies are same.
+    @staticmethod
+    def test_get_all_by_date__base_currency_is_same_as_target_currency(frankfurter, response, base_currency, logger):
+        """
+        Frankfurter API returns error when base and target currencies are same.
 
-    :type frankfurter: gold_digger.data_providers.Frankfurter
-    :type response: requests.Response
-    :type base_currency: str
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    response.status_code = 200
-    response._content = API_RESPONSE_USD
+        :type frankfurter: gold_digger.data_providers.Frankfurter
+        :type response: requests.Response
+        :type base_currency: str
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        response.status_code = 200
+        response._content = API_RESPONSE_USD
 
-    frankfurter._get = lambda url, **kw: response
+        frankfurter._get = lambda url, **kw: response
 
-    converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {base_currency, "CZK"}, logger)
+        converted_rates = frankfurter.get_all_by_date(date(2019, 4, 16), {base_currency, "CZK"}, logger)
 
-    assert converted_rates == {
-        base_currency: Decimal(1),
-        "CZK": Decimal(22.6509325555),
-    }
+        assert converted_rates == {
+            base_currency: Decimal(1),
+            "CZK": Decimal(22.6509325555),
+        }

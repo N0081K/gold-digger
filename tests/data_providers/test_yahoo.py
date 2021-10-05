@@ -156,48 +156,52 @@ YAHOO_RESPONSE = b"""
 """
 
 
-def test_get_by_date(yahoo, logger):
-    """
-    :type yahoo: gold_digger.data_providers.Yahoo
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    sample = Response()
-    sample.status_code = 200
-    sample._content = YAHOO_RESPONSE
+class TestGetByDate:
+    @staticmethod
+    def test_get_by_date(yahoo, logger):
+        """
+        :type yahoo: gold_digger.data_providers.Yahoo
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        sample = Response()
+        sample.status_code = 200
+        sample._content = YAHOO_RESPONSE
 
-    yahoo._get = lambda *a, **kw: sample
+        yahoo._get = lambda *a, **kw: sample
 
-    assert yahoo.get_by_date(date.today(), "CZK", logger) == Decimal("25.959")
+        assert yahoo.get_by_date(date.today(), "CZK", logger) == Decimal("25.959")
+
+    @staticmethod
+    def test_get_by_date__unsupported_currency(yahoo, logger):
+        """
+        :type yahoo: gold_digger.data_providers.Yahoo
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        sample = Response()
+        sample.status_code = 404
+        sample._content = "404 Not Found"
+
+        yahoo._get = lambda *a, **kw: sample
+
+        assert yahoo.get_by_date(date.today(), "XXX", logger) is None  # unsupported currency
 
 
-def test_get_by_date__unsupported_currency(yahoo, logger):
-    """
-    :type yahoo: gold_digger.data_providers.Yahoo
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    sample = Response()
-    sample.status_code = 404
-    sample._content = "404 Not Found"
+class TestGetAllByDate:
+    @staticmethod
+    def test_get_all_by_date(yahoo, logger):
+        """
+        :type yahoo: gold_digger.data_providers.Yahoo
+        :type logger: gold_digger.utils.ContextLogger
+        """
+        sample = Response()
+        sample.status_code = 200
+        sample._content = YAHOO_RESPONSE
 
-    yahoo._get = lambda *a, **kw: sample
+        yahoo._get = lambda url, **kw: sample
 
-    assert yahoo.get_by_date(date.today(), "XXX", logger) is None  # unsupported currency
+        rates = yahoo.get_all_by_date(date.today(), {"EUR", "CZK", "AED"}, logger)
 
-
-def test_get_all_by_date(yahoo, logger):
-    """
-    :type yahoo: gold_digger.data_providers.Yahoo
-    :type logger: gold_digger.utils.ContextLogger
-    """
-    sample = Response()
-    sample.status_code = 200
-    sample._content = YAHOO_RESPONSE
-
-    yahoo._get = lambda url, **kw: sample
-
-    rates = yahoo.get_all_by_date(date.today(), {"EUR", "CZK", "AED"}, logger)
-
-    assert rates == {
-        "EUR": Decimal("0.8884"),
-        "CZK": Decimal("25.959"),
-    }
+        assert rates == {
+            "EUR": Decimal("0.8884"),
+            "CZK": Decimal("25.959"),
+        }
