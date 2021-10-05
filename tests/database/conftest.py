@@ -32,6 +32,6 @@ def db_session(db_connection):
     Base.metadata.create_all(db_connection)
     session = scoped_session(sessionmaker(db_connection))
 
-    yield session
+    yield session()
 
     session.remove()
