@@ -109,6 +109,8 @@ class Provider(metaclass=ABCMeta):
         except InvalidOperation:
             logger.error("%s - Invalid operation: value %s is not a number (currency %s)", self, value, currency)
 
+        return None
+
     def set_request_limit_reached(self, logger):
         """
         :type logger: gold_digger.utils.ContextLogger
