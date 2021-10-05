@@ -123,7 +123,6 @@ class DiContainer:
     @classmethod
     def logger(cls, **extra):
         """
-        :type extra: dict
         :rtype: gold_digger.utils.ContextLogger
         """
         logger_ = cls.set_up_logger("gold-digger")

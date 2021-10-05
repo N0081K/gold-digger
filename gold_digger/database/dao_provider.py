@@ -11,7 +11,7 @@ class DaoProvider:
     def get_or_create_provider_by_name(self, name):
         """
         :type name: str
-        :rtype: Provider
+        :rtype: gold_digger.database.db_model.Provider
         """
         provider = self.db_session.query(Provider).filter(Provider.name == name).first()
         if not provider:

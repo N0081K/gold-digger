@@ -13,14 +13,24 @@ from gold_digger.managers.exchange_rate_manager import ExchangeRateManager
 
 @pytest.fixture
 def dao_exchange_rate():
+    """
+    :return: Mock of gold_digger.database.DaoExchangeRate
+    """
     return Mock(DaoExchangeRate)
 
 
 @pytest.fixture
 def dao_provider():
+    """
+    :return: Mock of gold_digger.database.DaoProvider
+    """
     mock = Mock(DaoProvider)
 
     def _get_or_create_provider_by_name(name):
+        """
+        :type name: str
+        :rtype: gold_digger.database.db_model.Provider
+        """
         return {
             "currency_layer": Provider(id=1, name="currency_layer"),
             "grandtrunk": Provider(id=2, name="grandtrunk"),
@@ -32,6 +42,10 @@ def dao_provider():
 
 @pytest.fixture
 def currency_layer(currencies):
+    """
+    :type currencies: set[str]
+    :return: Mock of gold_digger.data_providers.CurrencyLayer
+    """
     mock = Mock(CurrencyLayer)
     mock.name = "currency_layer"
     mock.get_all_by_date.return_value = {"EUR": Decimal(0.77), "USD": Decimal(1)}
@@ -42,6 +56,10 @@ def currency_layer(currencies):
 
 @pytest.fixture
 def fixer(currencies):
+    """
+    :type currencies: set[str]
+    :return: Mock of gold_digger.data_providers.Fixer
+    """
     mock = Mock(Fixer)
     mock.name = "fixer.io"
     mock.get_supported_currencies.return_value = currencies
@@ -51,6 +69,10 @@ def fixer(currencies):
 
 @pytest.fixture
 def grandtrunk(currencies):
+    """
+    :type currencies: set[str]
+    :return: Mock of gold_digger.data_providers.GrandTrunk
+    """
     mock = Mock(GrandTrunk)
     mock.name = "grandtrunk"
     mock.get_all_by_date.return_value = {"EUR": Decimal(0.75), "USD": Decimal(1)}
@@ -62,6 +84,13 @@ def grandtrunk(currencies):
 def test_update_all_rates_by_date(dao_exchange_rate, dao_provider, currency_layer, base_currency, currencies, logger):
     """
     Update rates of all providers for the specified date.
+
+    :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
+    :param dao_provider: Mock of gold_digger.database.DaoProvider
+    :param currency_layer: Mock of gold_digger.data_providers.CurrencyLayer
+    :type base_currency: str
+    :type currencies: set[str]
+    :type logger: logging.Logger
     """
     _date = date(2016, 2, 17)
 
@@ -84,6 +113,14 @@ def test_get_or_update_rate_by_date(dao_exchange_rate, dao_provider, currency_la
 
     Case: 2 providers, rate of provider 'currency_layer' is in DB, rate of provider 'grandtrunk' miss.
           Get rate for missing provider and update DB. Finally return list of all rates of the day (all provider rates).
+
+    :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
+    :param dao_provider: Mock of gold_digger.database.DaoProvider
+    :param currency_layer: Mock of gold_digger.data_providers.CurrencyLayer
+    :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
+    :type base_currency: str
+    :type currencies: set[str]
+    :type logger: logging.Logger
     """
     _date = date(2016, 2, 17)
 
@@ -111,6 +148,13 @@ def test_get_or_update_rate_by_date__today_after_cron_update(dao_exchange_rate, 
 
     Case: 2 providers, both rates are in DB as well as yesterday's data. No requests for yesterday should be made.
 
+    :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
+    :param dao_provider: Mock of gold_digger.database.DaoProvider
+    :param currency_layer: Mock of gold_digger.data_providers.CurrencyLayer
+    :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
+    :type base_currency: str
+    :type currencies: set[str]
+    :type logger: logging.Logger
     """
     today = date.today()
 
@@ -135,6 +179,14 @@ def test_get_or_update_rate_by_date__today_before_cron_update(dao_exchange_rate,
 
     Case: 2 providers, rate of provider 'currency_layer' is in DB, rate of provider 'grandtrunk' miss, the date is today, yesterday's rates are in DB.
           Get rate for missing provider from yesterday. Finally return list of all rates of the day (all provider rates).
+
+    :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
+    :param dao_provider: Mock of gold_digger.database.DaoProvider
+    :param currency_layer: Mock of gold_digger.data_providers.CurrencyLayer
+    :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
+    :type base_currency: str
+    :type currencies: set[str]
+    :type logger: logging.Logger
     """
     today = date.today()
     yesterday = today - timedelta(1)
@@ -171,6 +223,14 @@ def test_get_or_update_rate_by_date__today_before_cron_update_no_yesterday_rates
     Case: 2 providers, rate of provider 'currency_layer' is in DB, rate of provider 'grandtrunk' miss, the date is today, yesterday's rates aren't in DB.
           Try to get rate for missing provider from yesterday, fail and request from API, store to DB.
           Finally return list of all rates of the day (all provider rates).
+
+    :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
+    :param dao_provider: Mock of gold_digger.database.DaoProvider
+    :param currency_layer: Mock of gold_digger.data_providers.CurrencyLayer
+    :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
+    :type base_currency: str
+    :type currencies: set[str]
+    :type logger: logging.Logger
     """
     today = date.today()
     yesterday = today - timedelta(1)
@@ -207,7 +267,16 @@ def test_get_or_update_rate_by_date__no_api_requests_for_historical_data_on_limi
     logger,
 ):
     """
-    In case historical data are requested and they are not in database we don't want to request API if the provider has request limit
+    In case historical data are requested and they are not in database we don't want to request API if the provider has request limit.
+
+    :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
+    :param dao_provider: Mock of gold_digger.database.DaoProvider
+    :param fixer: Mock of gold_digger.data_providers.Fixer
+    :param currency_layer: Mock of gold_digger.data_providers.CurrencyLayer
+    :param grandtrunk: Mock of gold_digger.data_providers.GrandTrunk
+    :type base_currency: str
+    :type currencies: set[str]
+    :type logger: logging.Logger
     """
     yesterday = date.today() - timedelta(1)  # yesterday's rates are treated as historical rates
 
@@ -226,11 +295,21 @@ def test_get_or_update_rate_by_date__no_api_requests_for_historical_data_on_limi
 
 
 def test_get_exchange_rate_by_date(dao_exchange_rate, dao_provider, base_currency, logger):
+    """
+    :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
+    :param dao_provider: Mock of gold_digger.database.DaoProvider
+    :type base_currency: str
+    :type logger: logging.Logger
+    """
     _date = date(2016, 2, 17)
 
     exchange_rate_manager = ExchangeRateManager(dao_exchange_rate, dao_provider, [], base_currency, set())
 
     def _get_rates_by_date_currency(_, currency):
+        """
+        :type currency: str
+        :rtype: list[gold_digger.database.db_model.ExchangeRate]
+        """
         return {
             "EUR": [ExchangeRate(id=1, currency="EUR", rate=Decimal(0.89), provider=Provider(name="currency_layer"))],
             "CZK": [ExchangeRate(id=2, currency="CZK", rate=Decimal(24.20), provider=Provider(name="currency_layer"))],
@@ -248,6 +327,11 @@ def test_get_average_exchange_rate_by_dates(dao_exchange_rate, dao_provider, bas
 
     Case: 10 days period, 10 'EUR' rates but only 9 'CZK' rates in DB, 1 provider
           exchange rate is computed as average rate within the period and 'warning' is logged for missing 'CZK' rate
+
+    :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
+    :param dao_provider: Mock of gold_digger.database.DaoProvider
+    :type base_currency: str
+    :type logger: logging.Logger
     """
     _start_date = date(2016, 2, 7)
     _end_date = date(2016, 2, 17)
@@ -272,30 +356,45 @@ def test_get_average_exchange_rate_by_dates(dao_exchange_rate, dao_provider, bas
 
 
 def test_pick_rate_from_any_provider_if_rates_are_same():
+    """
+    Picked exchange rate is the same as the equal candidates.
+    """
     best = ExchangeRateManager.pick_the_best([Decimal(0.5), Decimal(0.5), Decimal(0.5)])
 
     assert best == 0.5
 
 
 def test_pick_middle_rate_if_it_exists():
+    """
+    Picked exchange rate is the middle of the unique candidates.
+    """
     best = ExchangeRateManager.pick_the_best([Decimal(0.0), Decimal(0.5), Decimal(1.0)])
 
     assert best == 0.5
 
 
 def test_pick_middle_rate_if_it_exists2():
+    """
+    Picked exchange rate is the middle of the unique candidates.
+    """
     best = ExchangeRateManager.pick_the_best([Decimal(1.5), Decimal(0.5), Decimal(1.0)])
 
     assert best == 1.0
 
 
 def test_pick_rate_from_pair_of_same_rates_by_order_of_providers():
+    """
+    Picked exchange rate is the most common of the candidates.
+    """
     best = ExchangeRateManager.pick_the_best([Decimal(0.0), Decimal(0.7), Decimal(0.7)])
 
     assert best == 0.7
 
 
 def test_pick_rate_from_most_similar_pair_of_rates_by_order_of_providers():
+    """
+    Picked exchange rate is the one most similar to the other candidates.
+    """
     best = ExchangeRateManager.pick_the_best([Decimal(0.02), Decimal(0.72), Decimal(0.74)])
 
     assert best == 0.72
@@ -303,8 +402,8 @@ def test_pick_rate_from_most_similar_pair_of_rates_by_order_of_providers():
 
 def test_get_exchange_rate_in_intervals_by_date(dao_exchange_rate, dao_provider, base_currency, currencies, logger):
     """
-    :param dao_exchange_rate: Mock of gold_digger.database.dao_exchange_rate.DaoExchangeRate
-    :param dao_provider: Mock of gold_digger.database.dao_provider.DaoProvider
+    :param dao_exchange_rate: Mock of gold_digger.database.DaoExchangeRate
+    :param dao_provider: Mock of gold_digger.database.DaoProvider
     :type base_currency: str
     :type currencies: set[str]
     :type logger: logging.Logger

@@ -157,6 +157,10 @@ YAHOO_RESPONSE = b"""
 
 
 def test_yahoo_get_by_date(yahoo, logger):
+    """
+    :type yahoo: gold_digger.data_providers.Yahoo
+    :type logger: logging.Logger
+    """
     sample = Response()
     sample.status_code = 200
     sample._content = YAHOO_RESPONSE
@@ -167,6 +171,10 @@ def test_yahoo_get_by_date(yahoo, logger):
 
 
 def test_yahoo_get_by_date__unsupported_currency(yahoo, logger):
+    """
+    :type yahoo: gold_digger.data_providers.Yahoo
+    :type logger: logging.Logger
+    """
     sample = Response()
     sample.status_code = 404
     sample._content = "404 Not Found"
@@ -177,6 +185,10 @@ def test_yahoo_get_by_date__unsupported_currency(yahoo, logger):
 
 
 def test_yahoo_get_all_by_date(yahoo, logger):
+    """
+    :type yahoo: gold_digger.data_providers.Yahoo
+    :type logger: logging.Logger
+    """
     sample = Response()
     sample.status_code = 200
     sample._content = YAHOO_RESPONSE

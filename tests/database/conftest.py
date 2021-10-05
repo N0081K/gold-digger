@@ -10,6 +10,9 @@ from gold_digger.database.db_model import Base
 def db_connection(db_connection_string):
     """
     Create one test database for all database tests.
+
+    :type db_connection_string: str
+    :rtype: sqlalchemy.engine.Connection
     """
     engine = create_engine(db_connection_string)
     if not database_exists(engine.url):
@@ -26,6 +29,9 @@ def db_connection(db_connection_string):
 def db_session(db_connection):
     """
     Drop and create all tables for every test, ie. every test starts with empty tables and new session.
+
+    :type db_connection: sqlalchemy.engine.Connection
+    :rtype: sqlalchemy.orm.Session
     """
     db_connection.execute("DROP TABLE IF EXISTS statistics_base CASCADE")
     Base.metadata.drop_all(db_connection)

@@ -197,8 +197,7 @@ class HealthAliveResource(DatabaseResource):
 class API(falcon.App):
     def __init__(self, *args, **kwargs):
         """
-        :type args: list
-        :type kwargs: dict
+        Initialize DI container and API routes.
         """
         super().__init__(*args, **kwargs)
         self.container = di_container(__file__)

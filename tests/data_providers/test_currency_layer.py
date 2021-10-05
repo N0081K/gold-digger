@@ -8,6 +8,9 @@ from requests import Response
 
 @pytest.fixture
 def response():
+    """
+    :rtype: requests.Response
+    """
     return Response()
 
 
@@ -15,6 +18,10 @@ def test_currency_layer__reach_monthly_limit(currency_layer, response, logger):
     """
     Currency layer free API has monthly requests limit. After the limit is reached, no calls to API should be made until the beginning of the next month.
     Case: Firstly block upcoming requests by sending 104 error, then set today for the first day of a month and unblock requests.
+
+    :type currency_layer: gold_digger.data_providers.CurrencyLayer
+    :type response: requests.Response
+    :type logger: logging.Logger
     """
     response.status_code = 200
     response._content = b"""

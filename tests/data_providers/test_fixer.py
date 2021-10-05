@@ -8,6 +8,9 @@ from requests import Response
 
 @pytest.fixture
 def response():
+    """
+    :rtype: requests.Response
+    """
     return Response()
 
 
@@ -27,6 +30,9 @@ def test_fixer_conversion_to_base_currency(fixer, logger):
         "USD": 1.125138
       }
     }
+
+    :type fixer: gold_digger.data_providers.Fixer
+    :type logger: logging.Logger
     """
     converted_rate = fixer._conversion_to_base_currency(Decimal(1.125138), Decimal(319.899055), logger)
     assert converted_rate == Decimal("284.3198389886396014034013616")
@@ -36,6 +42,10 @@ def test_fixer_reach_monthly_limit(fixer, response, logger):
     """
     Fixer free API has monthly requests limit. After the limit is reached, no calls to API should be made until the beginning of the next month.
     Case: Firstly block upcoming requests by sending 104 error, then set today for the first day of a month and unblock requests.
+
+    :type fixer: gold_digger.data_providers.Fixer
+    :type response: requests.Response
+    :type logger: logging.Logger
     """
     response.status_code = 200
     response._content = b"""

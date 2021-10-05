@@ -48,12 +48,15 @@ API_RESPONSE_USD = b"""
 
 @pytest.fixture
 def response():
+    """
+    :rtype: requests.Response
+    """
     return Response()
 
 
 def test_get_by_date__available(frankfurter, response, logger):
     """
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type logger: logging.Logger
     """
@@ -70,7 +73,7 @@ def test_get_by_date__date_unavailable(frankfurter, response, logger):
     """
     Frankfurter API returns rates from last available date when asked for an unavailable one.
 
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type logger: logging.Logger
     """
@@ -87,7 +90,7 @@ def test_get_by_date__date_too_old(frankfurter, response, logger):
     """
     Frankfurter API returns error when the specified date is before 1999-01-04.
 
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type logger: logging.Logger
     """
@@ -102,7 +105,7 @@ def test_get_by_date__date_too_old(frankfurter, response, logger):
 
 def test_get_by_date__currency_unavailable(frankfurter, response, logger):
     """
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type logger: logging.Logger
     """
@@ -119,7 +122,7 @@ def test_get_by_date__base_currency_is_same_as_target_currency(frankfurter, base
     """
     Frankfurter API returns error when base and target currencies are same.
 
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type base_currency: str
     :type logger: logging.Logger
     """
@@ -135,7 +138,7 @@ def test_get_by_date__base_currency_is_same_as_target_currency(frankfurter, base
 
 def test_get_all_by_date__available(frankfurter, response, logger):
     """
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type logger: logging.Logger
     """
@@ -155,7 +158,7 @@ def test_get_all_by_date__date_unavailable(frankfurter, response, logger):
     """
     Frankfurter API returns rates from last available date when asked for an unavailable one.
 
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type logger: logging.Logger
     """
@@ -175,7 +178,7 @@ def test_get_all_by_date__date_too_old(frankfurter, response, logger):
     """
     Frankfurter API returns error when the specified date is before 1999-01-04.
 
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type logger: logging.Logger
     """
@@ -190,7 +193,7 @@ def test_get_all_by_date__date_too_old(frankfurter, response, logger):
 
 def test_get_all_by_date__currency_unavailable(frankfurter, response, logger):
     """
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type logger: logging.Logger
     """
@@ -207,7 +210,7 @@ def test_get_all_by_date__base_currency_is_same_as_target_currency(frankfurter, 
     """
     Frankfurter API returns error when base and target currencies are same.
 
-    :type frankfurter: gold_digger.data_providers.frankfurter.Frankfurter
+    :type frankfurter: gold_digger.data_providers.Frankfurter
     :type response: requests.Response
     :type base_currency: str
     :type logger: logging.Logger
