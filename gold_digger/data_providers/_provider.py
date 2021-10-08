@@ -99,7 +99,7 @@ class Provider(metaclass=ABCMeta):
 
     def _to_decimal(self, value, currency=None, *, logger):
         """
-        :type value: str | float
+        :type value: str | float | decimal.Decimal
         :type currency: str | None
         :type logger: gold_digger.utils.ContextLogger
         :rtype: decimal.Decimal | None
@@ -108,6 +108,8 @@ class Provider(metaclass=ABCMeta):
             return Decimal(value)
         except InvalidOperation:
             logger.error("%s - Invalid operation: value %s is not a number (currency %s)", self, value, currency)
+
+        return None
 
     def set_request_limit_reached(self, logger):
         """
@@ -135,11 +137,20 @@ class Provider(metaclass=ABCMeta):
         Check request limit and prevent API call if the limit was exceeded.
 
         :type return_value: dict | set | None
+        :rtype: function
         """
 
         def decorator(func):
+            """
+            :type func: function
+            :rtype: function
+            """
+
             @wraps(func)
             def wrapper(*args, **kwargs):
+                """
+                :rtype: object
+                """
                 provider_instance = args[0]
                 if provider_instance.is_first_day_of_month():
                     provider_instance.request_limit_reached = False

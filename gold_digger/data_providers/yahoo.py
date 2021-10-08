@@ -78,7 +78,7 @@ class Yahoo(Provider):
         :type date_of_exchange: datetime.date
         :type currencies: set[str]
         :type logger: gold_digger.utils.ContextLogger
-        :rtype: {str: decimal.Decimal | None}
+        :rtype: dict[str, decimal.Decimal | None]
         """
         if date_of_exchange == date.today():
             date_str = date_of_exchange.strftime("%Y-%m-%d")
@@ -100,7 +100,7 @@ class Yahoo(Provider):
     def _get_all_latest(self, logger):
         """
         :type logger: gold_digger.utils.ContextLogger
-        :rtype: dict[str, decimal.Decimal]
+        :rtype: dict[str, None | decimal.Decimal]
         """
         currency_rates = {}
         symbols = {self.SYMBOLS_PATTERN.format(self.base_currency, currency) for currency in self.get_supported_currencies()}

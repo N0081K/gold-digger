@@ -48,7 +48,7 @@ For running the tests simply use:
  These tests are executed against real test database.
 
 ### Tests & QA
-- `pytest` runs unit tests (use `--runslow` for database tests)
+- `pytest` runs unit tests (use `--database-tests` for database tests)
 - `isort .` sorts imports
 - `black .` formats code
 - `flake8` checks code quality
@@ -126,7 +126,7 @@ docker run --detach --restart=always \
 
 ## Settings profiles
 
-Currently you can use two settings profiles:
+Currently, you can use two settings profiles:
 
 * default profile named `local` with definitions in `gold_digger/settings/_settings_local.py`
 * production profile named `master` with definitions in `gold_digger/settings/_settings_master.py`

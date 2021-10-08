@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import date, datetime as datetime_
 from http import HTTPStatus
 from operator import attrgetter
 
@@ -130,7 +130,7 @@ class GrandTrunk(Provider):
                 if record:
                     try:
                         date_string, exchange_rate_string = record.split(" ")
-                        day = datetime.strptime(date_string, "%Y-%m-%d")
+                        day = datetime_.strptime(date_string, "%Y-%m-%d")
                     except ValueError as e:
                         logger.error("%s - Parsing of rate & date on record '%s' failed: %s", self, record, e)
                         continue

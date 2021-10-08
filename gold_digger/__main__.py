@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime as datetime_
 
 import click
 from crontab import CronTab
@@ -10,10 +10,16 @@ from .settings import DATABASE_NAME
 
 
 def _parse_date(ctx, param, value):
+    """
+    :type ctx: click.core.Context
+    :type param: click.core.Option
+    :type value: str | datetime.date
+    :rtype: datetime.date
+    """
     if isinstance(value, date):
         return value
     try:
-        return datetime.strptime(value, "%Y-%m-%d").date()
+        return datetime_.strptime(value, "%Y-%m-%d").date()
     except ValueError:
         raise click.BadParameter("Date should be in format yyyy-mm-dd")
 
@@ -53,7 +59,7 @@ def cron(**_):
 @cli.command("initialize-db", help="Create empty table (drop if exists)")
 def initialize_db(**_):
     """
-    Create empty  table (drop if exists).
+    Create empty table (drop if exists).
     """
     with di_container(__file__) as di:
         print("This will drop & create all tables in '%s'. To continue press 'c'" % DATABASE_NAME)  # noqa: T001

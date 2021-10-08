@@ -29,7 +29,6 @@ class ContextLogger(LoggerAdapter):
 
     def with_context(self, **extra):
         """
-        :type extra: dict
         :rtype: gold_digger.utils.ContextLogger
         """
         extra_ = self.extra.copy()

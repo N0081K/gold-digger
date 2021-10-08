@@ -150,7 +150,7 @@ class ExchangeRateManager:
         :type from_currency: str
         :type to_currency: str
         :type logger: gold_digger.utils.ContextLogger
-        :rtype: Decimal
+        :rtype: decimal.Decimal
         """
         date_of_exchange = self.future_date_to_today(date_of_exchange, logger)
 
@@ -173,7 +173,7 @@ class ExchangeRateManager:
         :type start_date: datetime.date
         :type end_date: datetime.date
         :type currency: str
-        :rtype: list[tuple[int, int, Decimal]]
+        :rtype: list[tuple[int, int, decimal.Decimal]]
         """
         if currency == self._base_currency:
             return [("BASE", 1, ExchangeRate.base(self._base_currency).rate)]
@@ -190,7 +190,7 @@ class ExchangeRateManager:
         :type from_currency: str
         :type to_currency: str
         :type logger: gold_digger.utils.ContextLogger
-        :rtype: Decimal
+        :rtype: None | decimal.Decimal
         """
         today_or_past_date = self.future_date_to_today(start_date, logger)
         if today_or_past_date != start_date:
@@ -201,7 +201,6 @@ class ExchangeRateManager:
         _to_currency = self._get_sum_of_rates_in_period(start_date, end_date, to_currency)
 
         for (from_provider, from_count, from_sum), (to_provider, to_count, to_sum) in zip(_from_currency, _to_currency):
-
             logger.info(
                 "Sum of currencies %s (%s records) = %s, %s (%s records) = %s in period %s - %s by (%s, %s)",
                 from_currency,

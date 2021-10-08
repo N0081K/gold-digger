@@ -74,7 +74,7 @@ class Fixer(Provider):
         :type date_of_exchange: datetime.date
         :type currencies: set[str]
         :type logger: gold_digger.utils.ContextLogger
-        :rtype: dict[str, decimal.Decimal]
+        :rtype: dict[str, None | decimal.Decimal]
         """
         logger.debug("%s - Requesting for all rates for date %s", self, date_of_exchange)
 
@@ -117,7 +117,7 @@ class Fixer(Provider):
         :type base_currency_rate: decimal.Decimal
         :type currency_rate: decimal.Decimal
         :type logger: gold_digger.utils.ContextLogger
-        :rtype: decimal.Decimal
+        :rtype: None | decimal.Decimal
         """
         return self._to_decimal(currency_rate / base_currency_rate, logger=logger)
 
