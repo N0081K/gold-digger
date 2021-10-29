@@ -1,5 +1,5 @@
 black==21.9b0
-flake8==3.9.2
+flake8==4.0.1
 flake8-black==0.2.3
 flake8-commas==2.1.0
 flake8-eradicate==1.2.0
