@@ -2,7 +2,7 @@ cached-property==1.5.2
 cachetools==4.2.4
 click==8.0.3
 falcon==3.0.1
-git+git://github.com/martinvy/graypy.git@master#egg=graypy[amqp]
+git+https://github.com/martinvy/graypy.git@master#egg=graypy[amqp]
 gunicorn==20.1.0
 python-crontab[cron-schedule]==2.6.0
 requests==2.26.0
