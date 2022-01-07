@@ -19,7 +19,7 @@ class Frankfurter(Provider):
     BASE_URL = "https://api.frankfurter.app/{date}"
     name = "frankfurter"
 
-    @cachedmethod(cache=attrgetter("_cache"), key=lambda date_of_exchange, _: keys.hashkey(date_of_exchange))
+    @cachedmethod(cache=attrgetter("_cache"), key=lambda _, date_of_exchange, __: keys.hashkey(date_of_exchange))
     def get_supported_currencies(self, date_of_exchange, logger):
         """
         :type date_of_exchange: datetime.date
