@@ -51,7 +51,7 @@ pipeline {
                     String dockerImageName = "gold-digger-flake8"
                     sh """
                         docker build --rm -t $dockerImageName --build-arg REQUIREMENTS=-qa-check -f Dockerfile .
-                        docker run --rm --name=${dockerImageName}-${env.BUILD_ID} ${dockerImageName} flake8
+                        docker run --rm --name=${dockerImageName}-${env.BUILD_ID} --user=\$(id -u):\$(id -g) ${dockerImageName} flake8
                         docker rmi $dockerImageName
                     """
                 }
