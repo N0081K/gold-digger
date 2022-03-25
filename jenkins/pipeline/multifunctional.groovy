@@ -4,7 +4,7 @@ pipeline {
     }
 
     options {
-        ansiColor colorMapName: "XTerm"
+        ansiColor("XTerm")
     }
 
     parameters {

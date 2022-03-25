@@ -11,7 +11,7 @@ pipeline {
 
     options {
         timeout(time: 1, unit: 'HOURS')
-        ansiColor colorMapName: "gnome-terminal"
+        ansiColor("gnome-terminal")
     }
 
     stages {
