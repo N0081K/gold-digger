@@ -53,7 +53,7 @@ def cron(**_):
         logger.info("Cron started. Commands:\n{}\n---".format("\n".join(list(map(str, cron_tab.crons)))))
 
         for result in cron_tab.run_scheduler():
-            print(result)  # noqa: T001
+            print(result)  # noqa: T201
 
 
 @cli.command("initialize-db", help="Create empty table (drop if exists)")
@@ -62,7 +62,7 @@ def initialize_db(**_):
     Create empty table (drop if exists).
     """
     with di_container(__file__) as di:
-        print("This will drop & create all tables in '%s'. To continue press 'c'" % DATABASE_NAME)  # noqa: T001
+        print("This will drop & create all tables in '%s'. To continue press 'c'" % DATABASE_NAME)  # noqa: T201
         if input() != "c":
             return
         Base.metadata.drop_all(di.db_connection)

@@ -212,6 +212,6 @@ class API(falcon.App):
         :type host: str
         :type port: int
         """
-        print("Starting HTTP server at {}:{}".format(host, port))  # noqa: T001
+        print("Starting HTTP server at {}:{}".format(host, port))  # noqa: T201
         server = simple_server.make_server(host, port, self)
         server.serve_forever()
