@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+    gold_digger:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: gold_digger
+        restart: unless-stopped
+        ports:
+            - "8080:8080"
+
+    postgres:
+        image: postgres:latest
+        container_name: gold_digger_postgres
+        restart: unless-stopped
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: golddigger
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
