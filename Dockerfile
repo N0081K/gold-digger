@@ -15,7 +15,7 @@
 #   docker run --detach --restart=always --name gold-digger-cron gold-digger:latest python -m gold_digger cron
 #
 
-FROM python:3.8.12
+FROM python:3.10.4
 MAINTAINER ROI Hunter
 
 ARG REQUIREMENTS=""
