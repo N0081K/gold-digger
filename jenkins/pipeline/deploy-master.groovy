@@ -31,35 +31,35 @@ pipeline {
     }
 
     stages {
-        stage("Determine next app version") {
-            steps {
-                script {
-                    release = determineNextAppVersion {
-                        prerelease = false
-                        projectNameGithub = "gold-digger"
-                        releaseVersion = params.RELEASE_VERSION
-                        featureRelease = params.FEATURE_RELEASE
-                        slackChannel = "python-alerts"
-                        targetBranch = "master"
-                        hasProjectPrerelease = false
-                    }
-                    env.APP_VERSION = release.newVersion
-                }
-            }
-        }
+        // stage("Determine next app version") {
+        //     steps {
+        //         script {
+        //             release = determineNextAppVersion {
+        //                 prerelease = false
+        //                 projectNameGithub = "gold-digger"
+        //                 releaseVersion = params.RELEASE_VERSION
+        //                 featureRelease = params.FEATURE_RELEASE
+        //                 slackChannel = "python-alerts"
+        //                 targetBranch = "master"
+        //                 hasProjectPrerelease = false
+        //             }
+        //             env.APP_VERSION = release.newVersion
+        //         }
+        //     }
+        // }
 
-        stage("Build Docker image") {
-            steps {
-                script {
-                    dockerBuild env.BRANCH_NAME, "golddigger"
-                }
-            }
-        }
+        // stage("Build Docker image") {
+        //     steps {
+        //         script {
+        //             dockerBuild env.BRANCH_NAME, "golddigger"
+        //         }
+        //     }
+        // }
 
         stage("Deploy API") {
             steps {
                 script {
-                    withCredentials([file(credentialsId: "jenkins-roihunter-master-kubeconfig", variable: "kube_config")]) {
+                    withCredentials([file(credentialsId: "k8s cluster gke-roihunter-master-autopilot", variable: "kube_config")]) {
                         sh '''
                         sed -i "s/\\$BUILD_NUMBER/$BUILD_NUMBER/g" kubernetes/gold-digger-api-deployment.yaml
                         sed -i "s/\\$BUILD_NUMBER/$BUILD_NUMBER/g" kubernetes/gold-digger-cron-deployment.yaml
@@ -74,13 +74,13 @@ pipeline {
             }
         }
 
-        stage("Do GitHub release") {
-            steps {
-                script {
-                    doGitHubRelease({}, release)
-                }
-            }
-        }
+        // stage("Do GitHub release") {
+        //     steps {
+        //         script {
+        //             doGitHubRelease({}, release)
+        //         }
+        //     }
+        // }
     }
 
     post {

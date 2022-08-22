@@ -1,0 +1,85 @@
+name: Master deploy
+on:
+  workflow_dispatch:
+    inputs:
+      FEATURE_RELEASE: false
+      RELEASE_VERSION: ''
+env:
+  GKE_CLUSTER: roihunter-master 
+  GKE_ZONE: europe-west1  
+  GCS_PROJECT_ID: roihunter-master
+  GCS_IMAGE: gold-digger
+  K8S_DEPLOY_PATH: k8s
+  K8S_NAMESPACE: default
+jobs:
+  deploy:
+  # needs to run from hosted runner as it is the only one whitelisted for GKE API access for now
+    runs-on: [self-hosted,kubernetes] 
+    steps:
+      - name: "Git: Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Gcloud: Authentication"
+        id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GKE_MASTER_SA }}'
+
+      - name: 'Gcloud: Setup'
+        uses: google-github-actions/setup-gcloud@v0
+        with: 
+          project_id: ${{env.GCS_PROJECT_ID}}
+
+
+      - name: "Java: Setup"
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+          
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.4
+        with:
+          maven-version: 3.8.2
+
+      - run: | 
+          echo "${{secrets.MAVEN_SETTINGS_XML}}" | base64 -d > ~/.m2/settings.xml
+
+      - name: Execute MAVEN build
+        run: |
+          mvn -B package 
+
+      - name: "Docker: configure using gcloud"
+        run: |-
+          gcloud --quiet auth configure-docker
+
+      - name: "Docker: Build & push"
+        run: |
+          DOCKER_BUILDKIT=1 docker build --cache-from eu.gcr.io/${{env.GCS_PROJECT_ID}}/${{env.GCS_IMAGE}} -t eu.gcr.io/${{env.GCS_PROJECT_ID}}/${{env.GCS_IMAGE}} .
+          docker push eu.gcr.io/${{env.GCS_PROJECT_ID}}/${{env.GCS_IMAGE}}
+
+      - name: "Gcloud: Clean old images"
+        run: |
+          gcloud container images list-tags eu.gcr.io/${{env.GCS_PROJECT_ID}}/${{env.GCS_IMAGE}} --filter='-tags:*' --format='get(digest)' | xargs -I{} gcloud container images delete eu.gcr.io/${{env.GCS_PROJECT_ID}}/${{env.GCS_IMAGE}}@{}
+      
+      - name: "GKE: Authentication"
+        uses: 'google-github-actions/get-gke-credentials@v0'
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+
+      - name: "K8S: Apply and wait"
+        run: |
+          set -e
+          kubectl config set-context --current --namespace=${{env.K8S_NAMESPACE}}
+          kubectl apply -f ${{env.K8S_DEPLOY_PATH}} 
+          for deploy in `kubectl apply -f ${{env.K8S_DEPLOY_PATH}}  --dry-run -o json | jq -r '.items[] | (select(.apiVersion=="apps/v1").kind) + "+"  + (select(.apiVersion=="apps/v1").metadata.name )'`; do 
+            readarray -d + -t strarr <<< "$deploy"
+            kubectl rollout restart ${strarr[@]}
+            kubectl rollout status ${strarr[@]}
+          done 
+          
+      - name: curl
+        uses: wei/curl@v1
+        with:
+          args: -X POST -u 'human:${{secrets.RELEASER_PASSWORD}}' 'https://helpers.roihunter.com/helpers/releaser/product-data-collector/release/master/bugfix'
