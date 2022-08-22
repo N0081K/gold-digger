@@ -59,7 +59,7 @@ pipeline {
         stage("Deploy API") {
             steps {
                 script {
-                    withCredentials([file(credentialsId: "k8s cluster gke-roihunter-master-autopilot", variable: "kube_config")]) {
+                    withCredentials([file(credentialsId: "gke-roihunter-master-autopilot", variable: "kube_config")]) {
                         sh '''
                         sed -i "s/\\$BUILD_NUMBER/$BUILD_NUMBER/g" kubernetes/gold-digger-api-deployment.yaml
                         sed -i "s/\\$BUILD_NUMBER/$BUILD_NUMBER/g" kubernetes/gold-digger-cron-deployment.yaml
