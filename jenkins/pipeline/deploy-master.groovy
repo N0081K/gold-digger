@@ -31,30 +31,30 @@ pipeline {
     }
 
     stages {
-        // stage("Determine next app version") {
-        //     steps {
-        //         script {
-        //             release = determineNextAppVersion {
-        //                 prerelease = false
-        //                 projectNameGithub = "gold-digger"
-        //                 releaseVersion = params.RELEASE_VERSION
-        //                 featureRelease = params.FEATURE_RELEASE
-        //                 slackChannel = "python-alerts"
-        //                 targetBranch = "master"
-        //                 hasProjectPrerelease = false
-        //             }
-        //             env.APP_VERSION = release.newVersion
-        //         }
-        //     }
-        // }
+        stage("Determine next app version") {
+            steps {
+                script {
+                    release = determineNextAppVersion {
+                        prerelease = false
+                        projectNameGithub = "gold-digger"
+                        releaseVersion = params.RELEASE_VERSION
+                        featureRelease = params.FEATURE_RELEASE
+                        slackChannel = "python-alerts"
+                        targetBranch = "master"
+                        hasProjectPrerelease = false
+                    }
+                    env.APP_VERSION = release.newVersion
+                }
+            }
+        }
 
-        // stage("Build Docker image") {
-        //     steps {
-        //         script {
-        //             dockerBuild env.BRANCH_NAME, "golddigger"
-        //         }
-        //     }
-        // }
+        stage("Build Docker image") {
+            steps {
+                script {
+                    dockerBuild env.BRANCH_NAME, "golddigger"
+                }
+            }
+        }
 
         stage("Deploy API") {
             steps {
@@ -75,13 +75,13 @@ pipeline {
             }
         }
 
-        // stage("Do GitHub release") {
-        //     steps {
-        //         script {
-        //             doGitHubRelease({}, release)
-        //         }
-        //     }
-        // }
+        stage("Do GitHub release") {
+            steps {
+                script {
+                    doGitHubRelease({}, release)
+                }
+            }
+        }
     }
 
     post {
