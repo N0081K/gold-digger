@@ -60,7 +60,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: "gke-roihunter-master-autopilot", variable: "kube_config")]) {
+                    withCredentials([file(credentialsId: 'gke-roihunter-master-autopilot-service-account', variable: 'service_account'), file(credentialsId: 'gke-roihunter-master-autopilot', variable: 'kube_config')]) {
                         sh '''
+                        gcloud auth activate-service-account gke-roihunter-master@roihunter-master.iam.gserviceaccount.com --key-file="$service_account"
                         sed -i "s/\\$BUILD_NUMBER/$BUILD_NUMBER/g" kubernetes/gold-digger-api-deployment.yaml
                         sed -i "s/\\$BUILD_NUMBER/$BUILD_NUMBER/g" kubernetes/gold-digger-cron-deployment.yaml
                         sed -i "s/\\$APP_VERSION/$APP_VERSION/g" kubernetes/gold-digger-api-deployment.yaml
