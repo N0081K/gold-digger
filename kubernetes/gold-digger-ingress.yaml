@@ -1,21 +1,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gold-digger-ingress
-  namespace: default
+    name: gold-digger-ingress
+    namespace: default
 spec:
-  ingressClassName: nginx
-  rules:
-  - host: currency.roihunter.com
-    http:
-      paths:
-      - backend:
-          service:
-            name: gold-digger-service
-            port:
-              number: 80
-        path: /
-        pathType: Prefix
-  tls:
-    - hosts:
-      - currency.roihunter.com
+    ingressClassName: nginx
+    rules:
+        -   host: currency.roihunter.com
+            http:
+                paths:
+                    -   backend:
+                            service:
+                                name: gold-digger-service
+                                port:
+                                    number: 80
+                        path: /
+                        pathType: Prefix
+    tls:
+        -   hosts:
+                - currency.roihunter.com
