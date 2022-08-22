@@ -38,7 +38,7 @@ spec:
                     lifecycle:
                         preStop:
                             exec:
-                                command: ["/bin/bash", "-c", "sleep 10"]
+                                command: [ "/bin/bash", "-c", "sleep 10" ]
                     env:
                         -   name: GOLD_DIGGER_APP_VERSION
                             value: "$APP_VERSION"
