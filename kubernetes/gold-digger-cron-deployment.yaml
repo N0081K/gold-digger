@@ -5,6 +5,7 @@ metadata:
     labels:
         app: gold-digger-cron
 spec:
+    replicas: 1
     selector:
         matchLabels:
             app: gold-digger-cron
