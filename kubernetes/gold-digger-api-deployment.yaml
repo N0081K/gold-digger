@@ -7,7 +7,6 @@ metadata:
         tier: backend
         maintainer: python
 spec:
-    replicas: 1
     revisionHistoryLimit: 3
     selector:
         matchLabels:
