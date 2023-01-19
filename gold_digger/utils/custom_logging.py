@@ -10,7 +10,7 @@ class IncludeFilter:
     _instance = None
 
     class __IncludeFilter:
-        logger_names = tuple()
+        logger_names = ()
 
         def __init__(self, name=""):
             """

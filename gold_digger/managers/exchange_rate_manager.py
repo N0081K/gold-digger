@@ -33,7 +33,9 @@ class ExchangeRateManager:
                 day_rates = data_provider.get_all_by_date(date_of_exchange, self._supported_currencies, logger)
                 if day_rates:
                     provider = self._dao_provider.get_or_create_provider_by_name(data_provider.name)
-                    records = [dict(currency=currency, rate=rate, date=date_of_exchange, provider_id=provider.id) for currency, rate in day_rates.items()]
+                    records = [
+                        {"currency": currency, "rate": rate, "date": date_of_exchange, "provider_id": provider.id} for currency, rate in day_rates.items()
+                    ]
                     self._dao_exchange_rate.insert_exchange_rate_to_db(records, logger)
                     logger.info("Update succeeded: Provider %s, date %s.", data_provider, date_of_exchange)
                 else:
@@ -51,7 +53,7 @@ class ExchangeRateManager:
             date_rates = data_provider.get_historical(origin_date, self._supported_currencies, logger)
             provider = self._dao_provider.get_or_create_provider_by_name(data_provider.name)
             for day, day_rates in date_rates.items():
-                records = [dict(currency=currency, rate=rate, date=day, provider_id=provider.id) for currency, rate in day_rates.items()]
+                records = [{"currency": currency, "rate": rate, "date": day, "provider_id": provider.id} for currency, rate in day_rates.items()]
                 self._dao_exchange_rate.insert_exchange_rate_to_db(records, logger)
 
     def get_or_update_rate_by_date(self, date_of_exchange, currency, logger):
@@ -70,7 +72,7 @@ class ExchangeRateManager:
 
         today = date.today()
         exchange_rates = self._dao_exchange_rate.get_rates_by_date_currency(date_of_exchange, currency)
-        exchange_rates_providers = set(r.provider.name for r in exchange_rates)
+        exchange_rates_providers = {r.provider.name for r in exchange_rates}
         missing_provider_rates = [provider for provider in self._data_providers if provider.name not in exchange_rates_providers]
         for data_provider in missing_provider_rates:
             if date_of_exchange == today:
