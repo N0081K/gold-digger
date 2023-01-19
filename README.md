@@ -50,8 +50,9 @@ For running the tests simply use:
 ### Tests & QA
 - `pytest` runs unit tests (use `--database-tests` for database tests)
 - `isort .` sorts imports
-- `black .` formats code
+- `black .` formats code (use `--check` for dry run)
 - `flake8` checks code quality
+- `ruff .` checks code quality (use `--fix` to fix fixable errors)
 
 
 ## API endpoints

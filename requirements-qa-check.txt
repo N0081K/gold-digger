@@ -6,3 +6,4 @@ flake8-eradicate==1.4.0
 flake8-isort==6.0.0
 flake8-print==5.0.0
 isort==5.11.4
+ruff==0.0.226
