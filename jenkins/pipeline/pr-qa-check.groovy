@@ -76,7 +76,7 @@ pipeline {
                             --name=${dockerImageName}-${env.BUILD_ID} \
                             --user=\$(id -u):\$(id -g) \
                             ${dockerImageName} \
-                            ruff --diff --no-cache --quiet .
+                            ruff --no-cache --quiet .
                     """
                 }
             }
