@@ -1,4 +1,5 @@
 def github
+String dockerImageName = "gold-digger-qa-check"
 
 pipeline {
     agent {
@@ -45,15 +46,46 @@ pipeline {
             }
         }
 
-        stage("Flake8 check") {
+        stage("Build Docker image") {
             steps {
                 script {
-                    String dockerImageName = "gold-digger-flake8"
+                    sh "docker build --rm -t $dockerImageName --build-arg REQUIREMENTS=-qa-check -f Dockerfile ."
+                }
+            }
+        }
+
+        stage("Black check") {
+            steps {
+                script {
                     sh """
-                        docker build --rm -t $dockerImageName --build-arg REQUIREMENTS=-qa-check -f Dockerfile .
-                        docker run --rm --name=${dockerImageName}-${env.BUILD_ID} --user=\$(id -u):\$(id -g) ${dockerImageName} flake8
-                        docker rmi $dockerImageName
+                        docker run --rm \
+                            --name=${dockerImageName}-${env.BUILD_ID} \
+                            --user=\$(id -u):\$(id -g) \
+                            ${dockerImageName} \
+                            black --check --color --diff --quiet .
                     """
+                }
+            }
+        }
+
+        stage("Ruff check") {
+            steps {
+                script {
+                    sh """
+                        docker run --rm \
+                            --name=${dockerImageName}-${env.BUILD_ID} \
+                            --user=\$(id -u):\$(id -g) \
+                            ${dockerImageName} \
+                            ruff --diff --no-cache --quiet .
+                    """
+                }
+            }
+        }
+
+        stage("Remove Docker image") {
+            steps {
+                script {
+                    sh "docker rmi $dockerImageName"
                 }
             }
         }

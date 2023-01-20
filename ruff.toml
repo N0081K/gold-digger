@@ -1,0 +1,33 @@
+exclude = [
+    '.*/',
+    'gold_digger/settings/_settings_local.py',
+    'jenkins/*',
+    'kubernetes/*',
+]
+line-length = 160
+select = [
+    'C4',  # https://github.com/charliermarsh/ruff#flake8-comprehensions-c4
+    'COM',  # https://github.com/charliermarsh/ruff#flake8-commas-com
+    'E',  # https://github.com/charliermarsh/ruff#pycodestyle-e-w
+    'ERA',  # https://github.com/charliermarsh/ruff#eradicate-era
+    'F',  # https://github.com/charliermarsh/ruff#pyflakes-f
+    'I',  # https://github.com/charliermarsh/ruff#isort-i
+    'PIE',  # https://github.com/charliermarsh/ruff#flake8-pie-pie
+    'T20',  # https://github.com/charliermarsh/ruff#flake8-print-t20
+    'Q',  # https://github.com/charliermarsh/ruff#flake8-quotes-q
+    'W',  # https://github.com/charliermarsh/ruff#pycodestyle-e-w
+]
+target-version = "py310"
+
+[per-file-ignores]
+"__init__.py" = [
+    'F401',  # Module imported but unused
+    'F403',  # 'from module import *' used; unable to detect undefined names
+    'F405',  # Name may be undefined, or defined from star imports: module
+]
+
+[isort]
+combine-as-imports = true
+known-first-party = ['gold_digger']
+order-by-type = false
+relative-imports-order = 'closest-to-furthest'

@@ -29,7 +29,6 @@ def cli():
     """
     Define CLI click group.
     """
-    pass
 
 
 @cli.command("cron", help="Run cron jobs")
