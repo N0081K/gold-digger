@@ -7,7 +7,7 @@ updates:
         labels:
             - "dependencies"
             - "docker"
-        open-pull-requests-limit: 10
+        open-pull-requests-limit: 30
         pull-request-branch-name:
             separator: "-"
         rebase-strategy: "auto"
@@ -16,10 +16,10 @@ updates:
     -   package-ecosystem: "pip"
         directory: "/"
         schedule:
-            interval: "daily"
+            interval: "weekly"
         labels:
             - "dependencies"
-        open-pull-requests-limit: 10
+        open-pull-requests-limit: 30
         pull-request-branch-name:
             separator: "-"
         rebase-strategy: "auto"
