@@ -13,6 +13,7 @@ pipeline {
     options {
         timeout(time: 1, unit: 'HOURS')
         ansiColor("gnome-terminal")
+        timestamps()
     }
 
     stages {
