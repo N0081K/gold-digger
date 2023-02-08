@@ -5,6 +5,7 @@ pipeline {
 
     options {
         ansiColor("XTerm")
+        timestamps()
     }
 
     parameters {
