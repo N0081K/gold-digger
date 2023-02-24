@@ -31,6 +31,7 @@ class Yahoo(Provider):
             "FRF",
             "GGP",
             "GRD",
+            "HRK",
             "IEP",
             "IMP",
             "ITL",
