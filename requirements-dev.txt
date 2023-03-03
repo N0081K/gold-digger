@@ -2,4 +2,4 @@
 -r requirements-qa-check.txt
 
 pytest==7.2.1
-SQLAlchemy-Utils==0.39.0
+SQLAlchemy-Utils==0.40.0
