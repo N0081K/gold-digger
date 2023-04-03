@@ -13,8 +13,8 @@ select = [
     'F',  # https://beta.ruff.rs/docs/rules/#pyflakes-f
     'I',  # https://beta.ruff.rs/docs/rules/#isort-i
     'PIE',  # https://beta.ruff.rs/docs/rules/#flake8-pie-pie
-    'T20',  # https://beta.ruff.rs/docs/rules/#flake8-print-t20
     'Q',  # https://beta.ruff.rs/docs/rules/#flake8-quotes-q
+    'T20',  # https://beta.ruff.rs/docs/rules/#flake8-print-t20
     'W',  # https://beta.ruff.rs/docs/rules/#pycodestyle-e-w
 ]
 target-version = "py310"
