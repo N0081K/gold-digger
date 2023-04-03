@@ -49,7 +49,7 @@ def cron(**_):
             ),  # redirect to stdout/stderr
         )
 
-        logger.info("Cron started. Commands:\n{}\n---".format("\n".join(list(map(str, cron_tab.crons)))))
+        logger.info("Cron started. Commands:\n%s\n---", "\n".join(list(map(str, cron_tab.crons))))
 
         for result in cron_tab.run_scheduler():
             print(result)  # noqa: T201

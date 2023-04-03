@@ -6,16 +6,18 @@ exclude = [
 ]
 line-length = 160
 select = [
-    'C4',  # https://github.com/charliermarsh/ruff#flake8-comprehensions-c4
-    'COM',  # https://github.com/charliermarsh/ruff#flake8-commas-com
-    'E',  # https://github.com/charliermarsh/ruff#pycodestyle-e-w
-    'ERA',  # https://github.com/charliermarsh/ruff#eradicate-era
-    'F',  # https://github.com/charliermarsh/ruff#pyflakes-f
-    'I',  # https://github.com/charliermarsh/ruff#isort-i
-    'PIE',  # https://github.com/charliermarsh/ruff#flake8-pie-pie
-    'T20',  # https://github.com/charliermarsh/ruff#flake8-print-t20
-    'Q',  # https://github.com/charliermarsh/ruff#flake8-quotes-q
-    'W',  # https://github.com/charliermarsh/ruff#pycodestyle-e-w
+    'C4',  # https://beta.ruff.rs/docs/rules/#flake8-comprehensions-c4
+    'COM',  # https://beta.ruff.rs/docs/rules/#flake8-commas-com
+    'E',  # https://beta.ruff.rs/docs/rules/#pycodestyle-e-w
+    'ERA',  # https://beta.ruff.rs/docs/rules/#eradicate-era
+    'F',  # https://beta.ruff.rs/docs/rules/#pyflakes-f
+    'G',  # https://beta.ruff.rs/docs/rules/#flake8-logging-format-g
+    'I',  # https://beta.ruff.rs/docs/rules/#isort-i
+    'ISC',  # https://beta.ruff.rs/docs/rules/#flake8-implicit-str-concat-isc
+    'PIE',  # https://beta.ruff.rs/docs/rules/#flake8-pie-pie
+    'Q',  # https://beta.ruff.rs/docs/rules/#flake8-quotes-q
+    'T20',  # https://beta.ruff.rs/docs/rules/#flake8-print-t20
+    'W',  # https://beta.ruff.rs/docs/rules/#pycodestyle-e-w
 ]
 target-version = "py310"
 
