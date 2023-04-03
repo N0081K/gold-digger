@@ -12,6 +12,7 @@ select = [
     'ERA',  # https://beta.ruff.rs/docs/rules/#eradicate-era
     'F',  # https://beta.ruff.rs/docs/rules/#pyflakes-f
     'I',  # https://beta.ruff.rs/docs/rules/#isort-i
+    'ISC',  # https://beta.ruff.rs/docs/rules/#flake8-implicit-str-concat-isc
     'PIE',  # https://beta.ruff.rs/docs/rules/#flake8-pie-pie
     'Q',  # https://beta.ruff.rs/docs/rules/#flake8-quotes-q
     'T20',  # https://beta.ruff.rs/docs/rules/#flake8-print-t20
