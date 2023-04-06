@@ -7,7 +7,7 @@ metadata:
         tier: backend
         maintainer: python
 spec:
-    replicas: 1
+    replicas: 2
     revisionHistoryLimit: 3
     strategy:
         type: RollingUpdate
@@ -64,4 +64,4 @@ spec:
                             cpu: "0.25"
                         requests:
                             memory: "0.5G"
-                            cpu: "0.1"
+                            cpu: "0.25"

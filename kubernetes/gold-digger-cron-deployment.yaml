@@ -47,4 +47,4 @@ spec:
                             cpu: "0.25"
                         requests:
                             memory: "0.25G"
-                            cpu: "0.1"
+                            cpu: "0.25"
